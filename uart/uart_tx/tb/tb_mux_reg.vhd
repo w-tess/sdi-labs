@@ -38,8 +38,15 @@ begin
 
 	clk_gen : process is
 	begin
-		tb_clk <= tb_clk nor end_sim;
+		tb_clk <= not tb_clk;
 		wait for tck/2;
+
+		if end_sim = '1' then
+			assert false 
+			report "simulation completed succesfully." 
+			severity note;
+			wait;
+		end if;
 	end process;
 
 	-- processo di generazione dei dati, per una simulazione
@@ -55,6 +62,7 @@ begin
 			wait for tck;
 			if stimuli = "1111" then
 				end_sim <= '1';
+				wait;
 			end if;
 			stimuli := stimuli + 1;
 		end loop;

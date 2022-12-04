@@ -57,8 +57,15 @@ begin
 	-- a fini simulativi il funzionamento del clock
 	clk_gen : process is
 	begin
-		tb_clk <= tb_clk nor end_sim;
+		tb_clk <= not tb_clk;
 		wait for tck/2;
+
+		if end_sim = '1' then
+			assert false 
+			report "simulation completed succesfully." 
+			severity note;
+			wait;
+		end if;
 	end process;
 
 	-- process di generazione dei dati, tframe rappresenta

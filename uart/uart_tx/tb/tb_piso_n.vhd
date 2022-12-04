@@ -15,7 +15,7 @@ architecture test of tb_piso_n is
 		port(				  		 
 			pi : in std_logic_vector(N-1 downto 0);
 			si : in std_logic;
-			le, se, clk : in std_logic;
+			le, se, clk, rst : in std_logic;
 			po : out std_logic_vector(N downto 0);
 			so : out std_logic
 		);
@@ -26,7 +26,8 @@ architecture test of tb_piso_n is
 	signal tb_si : std_logic;
 	signal tb_le, tb_se : std_logic;
 	signal tb_po : std_logic_vector(8 downto 0);
-	signal tb_so: std_logic; 
+	signal tb_so : std_logic; 
+	signal tb_rst : std_logic;
 	signal tb_clk : std_logic := '1';
 	signal end_sim : std_logic := '0';
 	constant tck : time := 10 ns;
@@ -37,6 +38,7 @@ begin
 		generic map(N => 8)
 		port map(
 			clk => tb_clk,
+			rst => tb_rst,
 			pi => tb_pi,
 			si => tb_si,
 			le => tb_le,
@@ -50,8 +52,15 @@ begin
 	-- cosi' la simulazione
 	clk_gen : process is
 	begin
-		tb_clk <= tb_clk nor end_sim;
+		tb_clk <= not tb_clk;
 		wait for tck/2;
+		
+		if end_sim = '1' then
+			assert false 
+			report "simulation completed succesfully." 
+			severity note;
+			wait;
+		end if;
 	end process;
 
 	-- processo di generazione dei dati
@@ -59,12 +68,12 @@ begin
 	begin
 		tb_pi <= "10001110"; tb_si <= '0';
 		tb_le <= '0'; tb_se <= '0';
+		tb_rst <= '1';
 		wait for tck;
-		tb_se <= '1';
-		wait for tck;
-		tb_le <= '1';
-		wait for tck;
-		tb_le <= '0';
+		tb_se <= '1'; tb_le <= '1';
+		tb_rst <= '0';
+		wait for 2*tck;
+		tb_le <= '0'; 
 		wait;
 	end process;
 
