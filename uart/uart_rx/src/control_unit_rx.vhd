@@ -24,6 +24,8 @@ architecture behavioral of control_unit_rx is
 
 begin
 
+	-- processo di transizione stati
+
 	state_transition : process (
 		present_state, cu_start_rx, cu_stop, 
 		cu_tc_sipo0, cu_tc_sipo1, cu_end_rx
@@ -87,6 +89,8 @@ begin
 	
 	end process;
 	
+	-- processo di aggiornamento dello stato
+
 	state_updating : process(cu_clk, cu_rst) is
 	begin
 	
@@ -98,6 +102,8 @@ begin
 	
 	end process;
 	
+	-- processo di aggiornamento delle uscite
+
 	output_evaluation : process(present_state) is
 	begin
 		

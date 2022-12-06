@@ -15,7 +15,7 @@ end entity sipo_n;
 
 architecture behavioral of sipo_n is
 
-	component dff is
+	component d_ff is
 
 		generic(
 			RST_V : std_logic := '1';
@@ -28,14 +28,19 @@ architecture behavioral of sipo_n is
 			d_out : out std_logic
 		);
 	
-	end component dff;
+	end component d_ff;
 	
 begin
+
+	-- istanzio i nove D_FF che compongono la SIPO attraverso 
+	-- il costrutto generate, il primo FF a differenza degli 
+	-- altri ha un port map differente e quindi e' necessario 
+	-- un generate di tipo condizionale
 
 	sipo0 : for i in N-1 downto 0 generate
 
 		dff0_gen : if i = N-1 generate
-			dff0 : dff 
+			dff0 : d_ff 
 				port map(
 					d_in => si, 
 					clk => clk, 
@@ -46,7 +51,7 @@ begin
 		end generate dff0_gen;
 
 		dffi_gen : if i < N-1 generate 
-			dffi : dff
+			dffi : d_ff
 				port map (
 					d_in => po(i+1), 
 					clk => clk, 
@@ -56,6 +61,6 @@ begin
 				);
 		end generate dffi_gen;
 			
-	end generate;
+	end generate sipo0;
 
 end architecture behavioral;

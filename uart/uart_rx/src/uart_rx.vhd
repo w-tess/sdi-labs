@@ -3,6 +3,9 @@ use ieee.std_logic_1164.all;
 
 entity uart_rx is
 
+	-- TSYMB=tempo di simbolo inteso in cicli di clock
+	-- N=parallelismo di uscita
+
 	generic (
 		TSYMB : integer := 1042;
 		N : integer := 8
@@ -135,9 +138,19 @@ begin
 			dout => stop
 		);
 
+	-- il comparatore per il rilevamento dello start e'
+	-- sintetizzato attraverso un assegnazione condizionale
+
 	cmp_0 : start_rx <= '1' when sipo0_po = x"0F" else '0';
 	
+	-- il segnale di stato end_rx non e' altro che l'uscita
+	-- negata dell'ultimo D_FF di SIPO1
+
 	end_rx <= not sipo1_po(0);
+
+	-- dout e' costituita dalle uscite degli ultimi 8
+	-- D_FF di SIPO1
+
 	dout <= sipo1_po(N-1 downto 0);
 
 end architecture behavioral;
