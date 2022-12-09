@@ -4,7 +4,7 @@ use work.type_def.all;
 
 -- micro_instruction register, il comportamento
 -- e' analogo a quello del registro implementato
--- in "reg_n.vhd" tuttavia dato che questo registro
+-- in "cu_reg_n.vhd" tuttavia dato che questo registro
 -- lavora con i dati forniti da uROM, che sono di
 -- tipo "rom_t", era più comodo realizzare una 
 -- soluzione specifica che convertire tutto dal 
@@ -19,35 +19,35 @@ entity uir is
 	);
 	
 	port (
-		d_in : in rom_t;
-		rst, clk, en : in std_logic;
-		d_out : out rom_t;
+		d : in rom_t;
+		rst, clk, le : in std_logic;
+		q : out rom_t
 	);
 			
 end entity uir;
  
 architecture behavioral of uir is
 	constant rst_word : rom_t := (
-		cc => '0',
+		cc => '1',
 		next_state => "0000",
 		rom_sel_in => '0',
 		rom_sel_int => "000",
-		rom_sel_out => '0',
-		rom_le => (others => '0'),
-		rom_sel_mux01 => '0'
-		rom_sel_mux2 => '0'
-		rom_sel_mux3 => "00"
+		rom_sel_out => '1',
+		rom_le => "0000000011",
+		rom_sel_mux01 => '0',
+		rom_sel_mux2 => '0',
+		rom_sel_mux3 => "00",
 		rom_done => '0'
 	); 
 begin 
 
-	process (clk) is
+	process (clk, rst) is
 	begin  
-		if (clk'event and clk = CLK_V) then
-			if (rst = RST_V) then
-				d_out <= rst_word;
-			elsif (en = '1') then
-				d_out <= d_in;
+		if (rst = RST_V) then
+			q <= rst_word;
+		elsif (clk'event and clk = CLK_V) then
+			if (le = '1') then
+				q <= d;
 			end if;
 		end if;
 	end process; 

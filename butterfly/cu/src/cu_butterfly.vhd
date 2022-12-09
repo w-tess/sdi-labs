@@ -2,29 +2,42 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.type_def.all;
 
-entity cu is
+entity cu_butterfly is
 	port(
 		cu_reset : in std_logic;
 		cu_clk : in std_logic;
 		cu_start : in std_logic;
-		cu_commands : out commands_t;
+		cu_commands : out commands_t
 	);
-end entity cu;
+end entity cu_butterfly;
 
-architecture behavioral of cu is
+architecture behavioral of cu_butterfly is
 
-	component reg_n is
+	component cu_reg_n is
 		generic (
 			N : integer := 8;
 			RST_V : std_logic := '1';
 			CLK_V : std_logic := '1'
 		);
 		port (
-			d_in : in std_logic_vector(N-1 downto 0);
-			rst, clk, en : in std_logic;
-			d_out : out std_logic_vector(N-1 downto 0)
+			d : in std_logic_vector(N-1 downto 0);
+			rst, clk, le : in std_logic;
+			q : out std_logic_vector(N-1 downto 0)
 		);		
-	end component reg_n;
+	end component cu_reg_n;
+
+	component uir is
+		generic (
+			RST_V : std_logic := '1';
+			CLK_V : std_logic := '1'
+		);
+		
+		port (
+			d : in rom_t;
+			rst, clk, le : in std_logic;
+			q : out rom_t;
+		);	
+	end component uir;
 
 	component pla is
 		port(
@@ -33,7 +46,7 @@ architecture behavioral of cu is
 			cc_in : in std_logic;
 			pla_out : out std_logic
 		);
-	end entity pla;
+	end component pla;
 
 	component urom is
 		port(
@@ -41,7 +54,7 @@ architecture behavioral of cu is
 			even_out : out rom_t;
 			odd_out : out rom_t;
 		);
-	end entity urom;
+	end component urom;
 
 	signal urom_even_out, urom_odd_out : rom_t;
 	signal urom_mux_out : rom_t;
@@ -54,31 +67,31 @@ begin
 	
 	-- istanziazione dei componenti, le label utilizzate
 	-- fanno fede ai nomi sullo schematico della CU
-	uAR0 : reg_n
+	uAR0 : cu_reg_n
 		generic map(
 			N => 4,
 			RST_V => 0, -- uAR possiede reset attivo basso
 			CLK_V => 0  -- uAR campiona su fronte di discesa
 		)
 		port map(
-			d_in => uir_out.next_state(3 downto 1) & pla_out,
+			d => uir_out.next_state(3 downto 1) & pla_out,
 			rst => cu_reset,
 			clk => cu_clk,
-			en => '1',
-			d_out => uar_out
+			le => '1',
+			q => uar_out
 		);
 
-	uIR0 : reg_n
+	uIR0 : uir
 		generic map(
 			RST_V => 0 -- uIR possiede reset attivo basso
 			CLK_V => 1 -- uIR campiona su fronte di salita
 		)
 		port map(
-			din => urom_mux_out
+			d => urom_mux_out
 			rst => cu_reset,
 			clk => cu_clk,
-			en => '1',
-			d_out => uir_out
+			le => '1',
+			q => uir_out
 		);
 
 	PLA0 : pla
