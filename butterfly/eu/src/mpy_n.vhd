@@ -18,7 +18,7 @@ entity mpy_n is
 end entity mpy_n;
 
 architecture behavioral of mpy_n is
-	signal tmp_outc : signed(N-1 downto 0);
+	signal tmp_outc : signed(2*N-1 downto 0);
 begin
 
 	tmp_outc <= ina * inb;
@@ -29,7 +29,7 @@ begin
 	pipe_mpy : process(clk)
 	begin
 		if clk'event and clk = '1' then
-			outc <= tmp_outc;
+			outc <= tmp_outc(N-1 downto 0);
 		end if;
 	end process pipe_mpy;
 
