@@ -18,12 +18,14 @@ architecture test of tb_mpy_n is
 		port (
 			clk : in std_logic;
 			ina, inb : in signed(N-1 downto 0);
-			outc : out signed(N-1 downto 0)
+			sh : out signed(N-1 downto 0);
+			mpy : out signed(N-1 downto 0)
 		);
 	end component mpy_n;
 
 	signal tb_clk : std_logic := '1';
-	signal tb_ina, tb_inb, tb_outc : signed(32 downto 0);
+	signal tb_ina, tb_inb : signed(32 downto 0);
+	signal tb_sh, tb_mpy : signed(32 downto 0);
 	signal end_sim : std_logic := '0';
 	constant tck : time := 10 ns;
 
@@ -35,7 +37,8 @@ begin
 			clk => tb_clk,
 			ina => tb_ina,
 			inb => tb_inb,
-			outc => tb_outc
+			sh => tb_sh,
+			mpy => tb_mpy
 		);
 	
 	clk_gen : process is
@@ -60,22 +63,22 @@ begin
 	begin
 		tb_ina <= to_signed(20934, 33); 
 		tb_inb <= to_signed(-5867, 33);
-		wait for 10 ns;
+		wait for tck;
 		tb_ina <= to_signed(-405, 33); 
 		tb_inb <= to_signed(6043, 33);
-		wait for 10 ns;
+		wait for tck;
 		tb_ina <= to_signed(277, 33); 
 		tb_inb <= to_signed(24, 33);
-		wait for 10 ns;
+		wait for tck;
 		tb_ina <= to_signed(-2454, 33); 
 		tb_inb <= to_signed(-57, 33);
-		wait for 10 ns;
+		wait for tck;
 		tb_ina <= to_signed(-5690, 33); 
 		tb_inb <= to_signed(0, 33);
-		wait for 10 ns;
+		wait for tck;
 		tb_ina <= to_signed(1, 33); 
 		tb_inb <= to_signed(8959, 33);
-		wait for 10 ns;
+		wait for tck;
 		end_sim <= '1';
 		wait;
 	end process;
