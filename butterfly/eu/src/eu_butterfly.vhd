@@ -59,6 +59,7 @@ architecture behavioral of eu_butterfly is
 		);
 		port (
 			clk : in std_logic;
+			sub_add_n : in std_logic;
 			ina, inb: in signed(N-1 downto 0);
 			outc: out signed(N-1 downto 0)
 		);

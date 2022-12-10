@@ -11,6 +11,7 @@ entity add_n is
 
 	port (
 		clk : in std_logic;
+		sub_add_n : in std_logic;
 		ina, inb: in signed(N-1 downto 0);
 		outc: out signed(N-1 downto 0)
 	);
@@ -21,7 +22,8 @@ architecture behavioral of add_n is
 	signal tmp_outc : signed(N-1 downto 0);
 begin
 	
-	tmp_outc <= ina + inb;
+	tmp_outc <= ina + inb when sub_add_n = '0' else 
+				ina - inb;
 
 	-- la pipe non e' connessa a segnali di 
 	-- controllo, campiona incondizionatamente
