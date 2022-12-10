@@ -22,6 +22,7 @@ package type_def is
 			rom_sel_mux01 : std_logic;
 			rom_sel_mux2 : std_logic;
 			rom_sel_mux3 : std_logic_vector(0 to 1);
+			rom_sub_add_n : std_logic_vector(0 to 1);
 			rom_done : std_logic;
 		end record;
 	type commands_t is
@@ -33,6 +34,7 @@ package type_def is
 			sel_mux01 : std_logic;
 			sel_mux2 : std_logic;
 			sel_mux3 : std_logic_vector(0 to 1);
+			sub_add_n : std_logic_vector(0 to 1);
 			done : std_logic;
 		end record;
 end package type_def;

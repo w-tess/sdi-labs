@@ -25,7 +25,6 @@ architecture behavioral of eu_butterfly is
 	component regfile is
 		generic (
 			N : integer := 33;
-			EDGE : std_logic := '1'
 		);
 		port (
 			clk : in std_logic;

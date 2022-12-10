@@ -5,10 +5,8 @@ use ieee.numeric_std.all;
 entity regfile is
 	
 	-- N = I/O bit-width
-	-- EDGE = clock value during sample
 	generic (
 		N : integer := 33;
-		EDGE : std_logic := '1'
 	);
 	
 	port (

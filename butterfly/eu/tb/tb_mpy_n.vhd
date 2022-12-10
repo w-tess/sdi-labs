@@ -24,15 +24,15 @@ architecture test of tb_mpy_n is
 	end component mpy_n;
 
 	signal tb_clk : std_logic := '1';
-	signal tb_ina, tb_inb : signed(32 downto 0);
-	signal tb_sh, tb_mpy : signed(32 downto 0);
+	signal tb_ina, tb_inb : signed(N-1 downto 0);
+	signal tb_sh, tb_mpy : signed(N-1 downto 0);
 	signal end_sim : std_logic := '0';
 	constant tck : time := 10 ns;
 
 begin
 	
 	DUT : mpy_n 
-		generic map(N => 33)
+		generic map(N => N)
 		port map(
 			clk => tb_clk,
 			ina => tb_ina,
@@ -61,23 +61,23 @@ begin
 	-- CA2 rappresentabili su 16 bit
 	data_gen : process is
 	begin
-		tb_ina <= to_signed(20934, 33); 
-		tb_inb <= to_signed(-5867, 33);
+		tb_ina <= to_signed(20934, N); 
+		tb_inb <= to_signed(-5867, N);
 		wait for tck;
-		tb_ina <= to_signed(-405, 33); 
-		tb_inb <= to_signed(6043, 33);
+		tb_ina <= to_signed(-405, N); 
+		tb_inb <= to_signed(6043, N);
 		wait for tck;
-		tb_ina <= to_signed(277, 33); 
-		tb_inb <= to_signed(24, 33);
+		tb_ina <= to_signed(277, N); 
+		tb_inb <= to_signed(24, N);
 		wait for tck;
-		tb_ina <= to_signed(-2454, 33); 
-		tb_inb <= to_signed(-57, 33);
+		tb_ina <= to_signed(-2454, N); 
+		tb_inb <= to_signed(-57, N);
 		wait for tck;
-		tb_ina <= to_signed(-5690, 33); 
-		tb_inb <= to_signed(0, 33);
+		tb_ina <= to_signed(-5690, N); 
+		tb_inb <= to_signed(0, N);
 		wait for tck;
-		tb_ina <= to_signed(1, 33); 
-		tb_inb <= to_signed(8959, 33);
+		tb_ina <= to_signed(1, N); 
+		tb_inb <= to_signed(8959, N);
 		wait for tck;
 		end_sim <= '1';
 		wait;

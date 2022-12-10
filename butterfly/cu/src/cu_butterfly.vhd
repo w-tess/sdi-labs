@@ -124,6 +124,7 @@ begin
 	cu_commands.sel_mux01 <= uir_out.rom_sel_mux01;
 	cu_commands.sel_mux2 <= uir_out.rom_sel_mux2;
 	cu_commands.sel_mux3 <= uir_out.rom_sel_mux3;
+	cu_commands.sub_add_n <= uir_out.rom_sub_add_n;
 	cu_commands.done <= uir_out.rom_done;
 	
 end architecture behavioral;
