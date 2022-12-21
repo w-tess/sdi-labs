@@ -38,10 +38,10 @@ architecture test of tb_regfile is
 	signal tb_ina_ext, tb_inb_ext : signed(N-1 downto 0);
 	signal tb_wr_ext, tb_wi_ext : signed(N-1 downto 0);
 	signal tb_add0_outc, tb_round0_outb : signed(N-1 downto 0);
-	signal r2_q : signed(N-1 downto 0);
-	signal rmux0_out, rmux1_out : signed(N-1 downto 0);
-	signal rmux2_out, rmux3_out : signed(N-1 downto 0);
-	signal rmux4_out : signed(N-1 downto 0);
+	signal tb_r2_q : signed(N-1 downto 0);
+	signal tb_rmux0_out, tb_rmux1_out : signed(N-1 downto 0);
+	signal tb_rmux2_out, tb_rmux3_out : signed(N-1 downto 0);
+	signal tb_rmux4_out : signed(N-1 downto 0);
 	signal end_sim : std_logic := '0';
 	constant tck : time := 10 ns;
 
@@ -60,6 +60,32 @@ begin
 	end process;
 
 	data_gen_2 : process is
+		tb_add0_outc <= to_signed(100000000, 33);
+		tb_round0_outb <= to_signed(011111111, 33);
+		tb_le <= "0000000000";
+		tb_sel_in <= '0';
+		tb_sel_out <= '0';
+		wait for tck/2;
+		tb_le(0) <= '1';
+		tb_le(2) <= '1';
+		tb_sel_in <= '0';
+		tb_sel_out <= '1';
+		wait for tck;
+		tb_le(1) <= '1';
+		tb_le(3) <= '1';
+		tb_sel_in <= '1';
+		tb_sel_out <= '0';
+		wait for tck;
+		tb_le(1) <= '0';
+		tb_le(3) <= '1';
+		tb_sel_in <= '0';
+		tb_sel_out <= '1';
+		wait for tck;
+		tb_le(1) <= '1';
+		tb_le(3) <= '0';
+		tb_sel_in <= '1';
+		tb_sel_out <= '1';
+
 	end process;
 	
 end architecture test;
