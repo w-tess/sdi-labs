@@ -48,7 +48,18 @@ architecture test of tb_regfile is
 begin
 
 	DUT : regfile port map(
-
+		clk => tb_clk,
+		le	=> tb_le,
+		sel_int => tb_sel_int,
+		sel_in => tb_sel_in,
+		sel_out => tb_sel_out,
+		ina_ext => tb_ina_ext,
+		inb_ext => tb_inb_ext,
+		wr_ext => tb_wr_ext,
+		wi_ext => tb_wi_ext,
+		add0_outc => tb_add0_outc,
+		round0_outb => tb_round0_outb,
+		r2_q => tb_r2_q
 	);
 
 	clk_gen : process is
@@ -57,6 +68,22 @@ begin
 	end process;
 
 	data_gen_1 : process is
+		tb_le		<= others => '0';
+		tb_sel_int	<= "000";
+		tb_ina_ext	<= to_signed(100, N);
+		tb_inb_ext	<= to_signed(200, N);
+		tb_wr_ext	<= to_signed(300, N);
+		tb_wi_ext	<= to_signed(400, N);
+		tb_le(4)	<= '1'; tb_le(6) <= '1';
+		tb_le(8)	<= '1'; tb_le(9) <= '1';
+		wait for tck;
+		tb_le		<= others => '0';
+		tb_ina_ext	<= to_signed(500, N);
+		tb_inb_ext	<= to_signed(600, N);
+		wait for tck;
+		tb_le(5)	<= '1'; tb_le(7) <= '1';
+		wait for tck;
+		tb_sel_int	<= "111"; 
 	end process;
 
 	data_gen_2 : process is
