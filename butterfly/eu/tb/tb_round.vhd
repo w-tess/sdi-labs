@@ -45,7 +45,7 @@ begin
 		tb_ina <= to_signed(-793018521, 33);
 		wait for tck;
 		assert false 
-		report "simulation succesfully completed." 
+		report "simulation completed succesfully." 
 		severity note;
 		wait;
 	end process;
