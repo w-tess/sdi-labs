@@ -6,7 +6,7 @@ entity eu_butterfly is
 
 	generic (
 		N : integer := 16;
-		M : integer := 33;
+		M : integer := 33
 	);
 	
 	port (

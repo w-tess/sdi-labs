@@ -6,7 +6,7 @@ entity regfile is
 	
 	-- N = I/O bit-width
 	generic (
-		N : integer := 33;
+		N : integer := 33
 	);
 	
 	port (

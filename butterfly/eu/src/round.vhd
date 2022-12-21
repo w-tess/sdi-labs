@@ -5,12 +5,12 @@ use ieee.numeric_std.all;
 entity round is
 
 	generic(
-		N : integer := 33;
+		N : integer := 33
 	);
 
 	port (
 		ina : in signed(N-1 downto 0);
-		outb : out signed(N-1 downto 0);
+		outb : out signed(N-1 downto 0)
 	);
 
 end entity round;
@@ -26,12 +26,12 @@ architecture behavioral of round is
 		"110", "110", "111", "111"
 	);
 
-	signal addr : signed(3 downto 0);
+	signal addr : unsigned(3 downto 0);
 	signal tmp_round : signed(2 downto 0);
 
 begin
 
-	addr <= ina(N-14 downto N-17);
+	addr <= unsigned(std_logic_vector(ina(N-14 downto N-17)));
 
 	tmp_round <= round_rom(to_integer(addr));
 
