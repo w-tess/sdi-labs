@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.type_def.all;
 
--- micro_instruction register, il comportamento
--- e' analogo a quello del registro implementato
--- in "cu_reg_n.vhd" tuttavia dato che questo registro
--- lavora con i dati forniti da uROM, che sono di
+-- micro_instruction register, il comportamento e' 
+-- analogo a quello del registro implementato in 
+-- "cu_reg_n.vhd" tuttavia dato che questo registro 
+-- lavora con i dati forniti da uROM, che sono di 
 -- tipo "rom_t", era più comodo realizzare una 
 -- soluzione specifica che convertire tutto dal 
 -- tipo "rom_t" a std_logic_vector
@@ -37,6 +37,7 @@ architecture behavioral of uir is
 		rom_sel_mux01 => '0',
 		rom_sel_mux2 => '0',
 		rom_sel_mux3 => "00",
+		rom_sub_add_n => "00",
 		rom_done => '0'
 	); 
 begin 

@@ -23,7 +23,7 @@ architecture behavioral of cu_butterfly is
 			d : in std_logic_vector(N-1 downto 0);
 			rst, clk, le : in std_logic;
 			q : out std_logic_vector(N-1 downto 0)
-		);		
+		);
 	end component cu_reg_n;
 
 	component uir is
@@ -35,7 +35,7 @@ architecture behavioral of cu_butterfly is
 		port (
 			d : in rom_t;
 			rst, clk, le : in std_logic;
-			q : out rom_t;
+			q : out rom_t
 		);	
 	end component uir;
 
@@ -52,7 +52,7 @@ architecture behavioral of cu_butterfly is
 		port(
 			addr : in std_logic_vector(2 downto 0);
 			even_out : out rom_t;
-			odd_out : out rom_t;
+			odd_out : out rom_t
 		);
 	end component urom;
 
@@ -70,11 +70,12 @@ begin
 	uAR0 : cu_reg_n
 		generic map(
 			N => 4,
-			RST_V => 0, -- uAR possiede reset attivo basso
-			CLK_V => 0  -- uAR campiona su fronte di discesa
+			RST_V => '0', -- uAR possiede reset attivo basso
+			CLK_V => '0'  -- uAR campiona su fronte di discesa
 		)
 		port map(
-			d => uir_out.next_state(3 downto 1) & pla_out,
+			d(3 downto 1) => uir_out.next_state(3 downto 1),
+			d(0) => pla_out,
 			rst => cu_reset,
 			clk => cu_clk,
 			le => '1',
@@ -83,11 +84,11 @@ begin
 
 	uIR0 : uir
 		generic map(
-			RST_V => 0 -- uIR possiede reset attivo basso
-			CLK_V => 1 -- uIR campiona su fronte di salita
+			RST_V => '0', -- uIR possiede reset attivo basso
+			CLK_V => '1'  -- uIR campiona su fronte di salita
 		)
 		port map(
-			d => urom_mux_out
+			d => urom_mux_out,
 			rst => cu_reset,
 			clk => cu_clk,
 			le => '1',
@@ -117,14 +118,14 @@ begin
 
 	-- assegno infine i restanti campi di uIR ai campi 
 	-- corrispondenti in cu_commands
-	cu_commands.sel_in <= uir_out.rom_sel_in;
-	cu_commands.sel_int <= uir_out.rom_sel_int;
-	cu_commands.sel_out <= uir_out.rom_sel_out;
-	cu_commands.le <= uir_out.rom_le;
-	cu_commands.sel_mux01 <= uir_out.rom_sel_mux01;
-	cu_commands.sel_mux2 <= uir_out.rom_sel_mux2;
-	cu_commands.sel_mux3 <= uir_out.rom_sel_mux3;
-	cu_commands.sub_add_n <= uir_out.rom_sub_add_n;
-	cu_commands.done <= uir_out.rom_done;
+	cu_commands.sel_in		<= uir_out.rom_sel_in;
+	cu_commands.sel_int		<= uir_out.rom_sel_int;
+	cu_commands.sel_out		<= uir_out.rom_sel_out;
+	cu_commands.le			<= uir_out.rom_le;
+	cu_commands.sel_mux01	<= uir_out.rom_sel_mux01;
+	cu_commands.sel_mux2	<= uir_out.rom_sel_mux2;
+	cu_commands.sel_mux3	<= uir_out.rom_sel_mux3;
+	cu_commands.sub_add_n	<= uir_out.rom_sub_add_n;
+	cu_commands.done 		<= uir_out.rom_done;
 	
 end architecture behavioral;
