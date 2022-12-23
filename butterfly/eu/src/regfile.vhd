@@ -30,31 +30,32 @@ end entity regfile;
 
 architecture behavioral of regfile is
 
+	type ri_t is array(9 downto 0) of signed(N-1 downto 0);
+	signal ri_d : ri_t;
+	signal ri_q : ri_t;
+
 	component reg_n is  
 		generic (
 			N : integer := 33;
 			EDGE : std_logic := '1'
 		);
 		port (
-			d : in signed(N-1 downto 0);   
+			d : in signed(N-1 downto 0);
 			clk, le : in std_logic;   
 			q : out signed(N-1 downto 0)
 		);	
 	end component reg_n;
 
-	signal ri_d : signed(9 downto 0);
-	signal ri_q : signed(9 downto 0);
-
 begin
 
-	-- definisco tramite un generite i vari registri 
+	-- definisco tramite un generate i vari registri 
 	-- interni al REGFILE
 	reg_chain : for i in 9 downto 0 generate
 		reg_i : reg_n
 			port map(
-				d => ri_d(i), 
-				clk => clk, 
-				le => le(i),  
+				d => ri_d(i),
+				clk => clk,
+				le => le(i),
 				q => ri_q(i)
 			);
 	end generate;

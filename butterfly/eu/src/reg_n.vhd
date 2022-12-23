@@ -12,9 +12,9 @@ entity reg_n is
 	);
 	
 	port (
-		d : in std_logic_vector(N-1 downto 0);   
+		d : in signed(N-1 downto 0);   
 		clk, le : in std_logic;
-		q : out std_logic_vector(N-1 downto 0)
+		q : out signed(N-1 downto 0)
 	);
 			
 end entity reg_n; 

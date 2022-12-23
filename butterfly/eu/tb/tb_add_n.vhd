@@ -54,24 +54,24 @@ begin
 	data_gen : process is
 	begin
 		tb_sub_add_n <= '0';
-		tb_ina <= to_signed(20934, N); 
-		tb_inb <= to_signed(-5867, N);
+		tb_ina <= to_signed( 13934, N); 
+		tb_inb <= to_signed(-981098067, N);
 		wait for 10 ns;
-		tb_ina <= to_signed(-405, N); 
-		tb_inb <= to_signed(6043, N);
+		tb_ina <= to_signed(-20205, N); 
+		tb_inb <= to_signed( 1030496043, N);
 		wait for 10 ns;
-		tb_ina <= to_signed(277, N); 
-		tb_inb <= to_signed(24, N);
+		tb_ina <= to_signed( 14007, N); 
+		tb_inb <= to_signed( 0200220304, N);
 		wait for 10 ns;
 		tb_sub_add_n <= '1';
-		tb_ina <= to_signed(-2454, N); 
-		tb_inb <= to_signed(-57, N);
+		tb_ina <= to_signed(-9054, N); 
+		tb_inb <= to_signed(-0299055097, N);
 		wait for 10 ns;
 		tb_ina <= to_signed(-5690, N); 
-		tb_inb <= to_signed(0, N);
+		tb_inb <= to_signed( 0083394550, N);
 		wait for 10 ns;
-		tb_ina <= to_signed(1, N); 
-		tb_inb <= to_signed(8959, N);
+		tb_ina <= to_signed( 10559, N); 
+		tb_inb <= to_signed( 0005495059, N);
 		wait for 10 ns;
 		end_sim <= '1';
 		wait;

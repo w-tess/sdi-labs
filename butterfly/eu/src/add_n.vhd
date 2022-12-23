@@ -22,8 +22,11 @@ architecture behavioral of add_n is
 	signal tmp_outc : signed(N-1 downto 0);
 begin
 	
-	tmp_outc <= ina + inb when sub_add_n = '0' else 
-				ina - inb;
+	-- shift verso sinistra per riallineare il primo
+	-- operando con il risultato della moltiplicazione
+	tmp_outc <= shift_left(ina, 15) + inb 
+				when sub_add_n = '0' else
+				shift_left(ina, 15) - inb;
 
 	-- la pipe non e' connessa a segnali di 
 	-- controllo, campiona incondizionatamente
