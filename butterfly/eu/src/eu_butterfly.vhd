@@ -173,7 +173,6 @@ begin
 	
 	mux3 : mux3_out <= add0_outc when sel_mux3 = "00" else 
 					   add1_outc when sel_mux3 = "01" else 
-					   r2_q 	 when sel_mux3 = "10" else
-					   (others => 'X');
+					   r2_q;
 
 end architecture behavioral;
