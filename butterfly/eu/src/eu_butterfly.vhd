@@ -76,16 +76,15 @@ architecture behavioral of eu_butterfly is
 		);
 	end component round;
 
-
 	signal ina_ext, inb_ext : signed(M-1 downto 0);
 	signal wr_ext, wi_ext : signed(M-1 downto 0);
 	signal sf0_in, sf1_in : signed(N-1 downto 0);
-	signal rmux3_out, rmux4_out : signed(M-1 downto 0);
-	signal r2_q, rmux0_out, rmux1_out, rmux2_out : signed(M-1 downto 0);
-	signal mux0_out, mux1_out, mux2_out : signed(M-1 downto 0);
+	signal rmux0_out, rmux1_out, rmux2_out : signed(M-1 downto 0);
+	signal rmux3_out, rmux4_out, r2_q : signed(M-1 downto 0);
+	signal mux0_out, mux1_out : signed(M-1 downto 0);
+	signal mux2_out, mux3_out : signed(M-1 downto 0);
 	signal mpy0_mpy, mpy0_sh : signed(M-1 downto 0);
 	signal add0_outc, add1_outc : signed(M-1 downto 0);
-	signal mux3_out : signed(M-1 downto 0);
 	signal round0_outb : signed(M-1 downto 0);
 
 begin
@@ -95,7 +94,15 @@ begin
 	wr_ext <= resize(wr, M);
 	wi_ext <= resize(wi, M);
 
-	regfile : regfile
+	-- scalamento per i dati in uscita
+	sf0_in <= rmux3_out(M-1 downto 17);
+	sf1_in <= rmux4_out(M-1 downto 17);
+	sf0 : outb <= shift_right(sf0_in, 1) when sf_2h_1l = '0' else
+				  shift_right(sf0_in, 2);
+	sf1 : outa <= shift_right(sf1_in, 1) when sf_2h_1l = '0' else
+				  shift_right(sf1_in, 2);
+
+	regfile0 : regfile
 	generic map(N => M)
 	port map(
 		clk => clk, 
@@ -117,14 +124,6 @@ begin
 		rmux4_out => rmux4_out
 
 	);
-
-	sf0_in <= rmux3_out(M-1 downto 17);
-	sf1_in <= rmux4_out(M-1 downto 17);
-
-	sf0 : outb <= shift_right(sf0_in, 1) when sf_2h_1l = '0' else
-				  shift_right(sf0_in, 2);
-	sf1 : outa <= shift_right(sf1_in, 1) when sf_2h_1l = '0' else
-				  shift_right(sf1_in, 2);
 	
 	mpy0 : mpy_n
 	generic map(N => M)
@@ -141,7 +140,7 @@ begin
 	generic map(N => M)
 	port map(
 		clk => clk, 
-		sub_add_n => sub_add_n,
+		sub_add_n => sub_add_n(0),
 		ina => mux2_out,
 		inb => mpy0_mpy,
 		outc => add0_outc
@@ -152,7 +151,7 @@ begin
 	generic map(N => M)
 	port map(
 		clk => clk, 
-		sub_add_n => sub_add_n,
+		sub_add_n => sub_add_n(1),
 		ina => mpy0_sh,
 		inb => add0_outc,
 		outc => add1_outc
@@ -162,18 +161,19 @@ begin
 	round0 : round
 	generic map(N => M)
 	port map(
-		ina => round0_ina,
+		ina => mux3_out,
 		outb => round0_outb
-
 	);
 
 	mux0 : mux0_out <= rmux2_out when sel_mux01 = '0' else rmux0_out;
 
-	mux1 : mux1_out <= rmux1_out when sel_mux01 = '0' else '2';
+	mux1 : mux1_out <= rmux1_out when sel_mux01 = '0' else to_signed(2, M);
 	
 	mux2 : mux2_out <= rmux0_out when sel_mux2 = '0' else r2_q;
 	
-	mux3 : mux3_out <= add0_outc when sel_mux3 = "00" else add1_outc when sel_mux3 = "01" else r2_q;
-
+	mux3 : mux3_out <= add0_outc when sel_mux3 = "00" else 
+					   add1_outc when sel_mux3 = "01" else 
+					   r2_q 	 when sel_mux3 = "10" else
+					   (others => 'X');
 
 end architecture behavioral;
