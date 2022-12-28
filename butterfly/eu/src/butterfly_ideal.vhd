@@ -7,6 +7,7 @@ entity butterfly_ideal is
 
 	generic(
 		N : integer := 16
+        M : integer := 33
 	)
 
 	port (
@@ -17,6 +18,16 @@ entity butterfly_ideal is
 end entity butterfly_ideal;
 
 architecture behavioral of butterfly_ideal is
+
+    component round is
+		generic (
+			N : integer := 33
+		);
+		port (
+			ina : in signed(N-1 downto 0);
+			outb: out signed(N-1 downto 0)
+		);
+	end component round;
 
     signal m1, m2, m3, m4, m5, m6 : signed(2*N downto 0);
 	signal s1, s2, s3, s4, s5, s6  : signed(2*N downto 0);
@@ -46,9 +57,37 @@ begin
     -- rounda_r, rounda_i, ..., uscite del blocco di round
     -- outa_r, outa_i, ..., assegno i 16 MSB di rounda_r, rounda_i, ...
 
-    outa_r <= s2;
-    outa_i <= s4;
-    outb_r <= s5;
-    outb_i <= s6;
+    round0 : round
+	generic map(N => M)
+	port map(
+		ina => s2,
+		outb => rounda_r
+	);
+
+    round1 : round
+	generic map(N => M)
+	port map(
+		ina => s4,
+		outb => rounda_i
+	);
+
+    round2 : round
+	generic map(N => M)
+	port map(
+		ina => s5,
+		outb => roundb_r
+	);
+
+    round3 : round
+	generic map(N => M)
+	port map(
+		ina => s6,
+		outb => roundb_i
+	);
+
+    outa_r <= rounda_r(M downto 18);
+    outa_i <= rounda_i(M downto 18);
+    outb_r <= roundb_r(M downto 18);
+    outb_i <= roundb_i(M downto 18);
 
 end architecture behavioral;
