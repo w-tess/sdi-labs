@@ -6,23 +6,23 @@ use work.type_def.all;
 entity butterfly is
 
 	generic(
-		N : integer := 16,
+		N : integer := 16;
 		M : integer := 33
-	)
+	);
 
 	port (
 		clk, reset_n : in std_logic;
 		sf_2h_1l, start : in std_logic;
 		ina, inb : in signed(N-1 downto 0);
 		wr, wi : in signed(N-1 downto 0);
-		outa, outb : out signed(N-1 downto 0);
+		outa, outb : out signed(N-1 downto 0)
 	);
 
 end entity butterfly;
 
 architecture behavioral of butterfly is
 	
-	component eu_butterfly is  
+	component eu_butterfly is
 		generic (
 			N : integer := 16;
 			M : integer := 33

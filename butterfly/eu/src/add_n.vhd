@@ -24,9 +24,7 @@ begin
 	
 	-- shift verso sinistra per riallineare il primo
 	-- operando con il risultato della moltiplicazione
-	tmp_outc <= shift_left(ina, 15) + inb 
-				when sub_add_n = '0' else
-				shift_left(ina, 15) - inb;
+	tmp_outc <= ina + inb when sub_add_n = '0' else ina - inb;
 
 	-- la pipe non e' connessa a segnali di 
 	-- controllo, campiona incondizionatamente

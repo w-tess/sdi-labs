@@ -78,7 +78,7 @@ architecture behavioral of eu_butterfly is
 
 	signal ina_ext, inb_ext : signed(M-1 downto 0);
 	signal wr_ext, wi_ext : signed(M-1 downto 0);
-	signal sf0_in, sf1_in : signed(N-1 downto 0);
+	signal sf0_out, sf1_out : signed(N-1 downto 0);
 	signal rmux0_out, rmux1_out, rmux2_out : signed(M-1 downto 0);
 	signal rmux3_out, rmux4_out, r2_q : signed(M-1 downto 0);
 	signal mux0_out, mux1_out : signed(M-1 downto 0);
@@ -88,19 +88,21 @@ architecture behavioral of eu_butterfly is
 	signal round0_outb : signed(M-1 downto 0);
 
 begin
-	-- estensione del segno per i dati in ingresso
-	ina_ext <= resize(ina, M);
+	-- estensione del segno per i dati in ingresso 
+	-- l'ingresso ina viene shiftato verso sinistra di 15 bit
+	-- per riallineare il dato durante le operazioni di somma
+	ina_ext <= shift_left(resize(ina, M), 15);
 	inb_ext <= resize(inb, M);
-	wr_ext <= resize(wr, M);
-	wi_ext <= resize(wi, M);
+	wr_ext  <= resize(wr, M);
+	wi_ext  <= resize(wi, M);
 
 	-- scalamento per i dati in uscita
-	sf0_in <= rmux3_out(M-1 downto 17);
-	sf1_in <= rmux4_out(M-1 downto 17);
-	sf0 : outb <= shift_right(sf0_in, 1) when sf_2h_1l = '0' else
-				  shift_right(sf0_in, 2);
-	sf1 : outa <= shift_right(sf1_in, 1) when sf_2h_1l = '0' else
-				  shift_right(sf1_in, 2);
+	sf0 : sf0_out <= shift_right(rmux3_out, 1) when sf_2h_1l = '0' else
+					 shift_right(rmux3_out, 2);
+	sf1 : sf1_out <= shift_right(rmux4_out, 1) when sf_2h_1l = '0' else
+					 shift_right(rmux4_out, 2);
+	outb <= sf0_out(M-3 downto M-N-3);
+	outa <= sf1_out(M-3 downto M-N-3);
 
 	regfile0 : regfile
 	generic map(N => M)
