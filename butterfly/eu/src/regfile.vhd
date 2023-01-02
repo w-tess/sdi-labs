@@ -12,8 +12,8 @@ entity regfile is
 	port (
 		-- ingressi per i comandi
 		clk : in std_logic;
-		le : in std_logic_vector(9 downto 0);
-		sel_int : in std_logic_vector(2 downto 0);
+		le : in std_logic_vector(0 to 9);
+		sel_int : in std_logic_vector(0 to 2);
 		sel_in, sel_out : in std_logic;
 		-- ingressi per i dati
 		ina_ext, inb_ext : in signed(N-1 downto 0);
@@ -30,7 +30,7 @@ end entity regfile;
 
 architecture behavioral of regfile is
 
-	type ri_t is array(9 downto 0) of signed(N-1 downto 0);
+	type ri_t is array(0 to 9) of signed(N-1 downto 0);
 	signal ri_d : ri_t;
 	signal ri_q : ri_t;
 
@@ -50,7 +50,7 @@ begin
 
 	-- definisco tramite un generate i vari registri 
 	-- interni al REGFILE
-	reg_chain : for i in 9 downto 0 generate
+	reg_chain : for i in 0 to 9 generate
 		reg_i : reg_n
 			port map(
 				d => ri_d(i),

@@ -16,8 +16,8 @@ architecture test of tb_regfile is
 		port (
 			-- ingressi per i comandi
 			clk : in std_logic;
-			le : in std_logic_vector(9 downto 0);
-			sel_int : in std_logic_vector(2 downto 0);
+			le : in std_logic_vector(0 to 9);
+			sel_int : in std_logic_vector(0 to 2);
 			sel_in, sel_out : in std_logic;
 			-- ingressi per i dati
 			ina_ext, inb_ext : in signed(N-1 downto 0);
@@ -32,8 +32,8 @@ architecture test of tb_regfile is
 	end component regfile;
 
 	signal tb_clk : std_logic := '1';
-	signal tb_le : std_logic_vector(9 downto 0);
-	signal tb_sel_int : std_logic_vector(2 downto 0);
+	signal tb_le : std_logic_vector(0 to 9);
+	signal tb_sel_int : std_logic_vector(0 to 2);
 	signal tb_sel_in, tb_sel_out : std_logic;
 	signal tb_ina_ext, tb_inb_ext : signed(N-1 downto 0);
 	signal tb_wr_ext, tb_wi_ext : signed(N-1 downto 0);
@@ -82,7 +82,7 @@ begin
 
 	data_gen_1 : process is
 	begin
-		tb_le(9 downto 4) <= (others => '0');
+		tb_le(4 to 9) <= (others => '0');
 		tb_sel_int <= "000";
 		tb_ina_ext <= to_signed(100, N);
 		tb_inb_ext <= to_signed(200, N);
@@ -91,7 +91,7 @@ begin
 		tb_le(4) <= '1'; tb_le(6) <= '1';
 		tb_le(8) <= '1'; tb_le(9) <= '1';
 		wait for tck;
-		tb_le(9 downto 4) <= (others => '0');
+		tb_le(4 to 9) <= (others => '0');
 		tb_ina_ext <= to_signed(500, N);
 		tb_inb_ext <= to_signed(600, N);
 		wait for tck;
@@ -104,15 +104,15 @@ begin
 
 	data_gen_2 : process is
 	begin
-		tb_le(3 downto 0) <= "0000";
+		tb_le(0 to 3) <= "0000";
 		tb_add0_outc <= to_signed(100000000, 33);
 		tb_round0_outb <= to_signed(011111111, 33);
 		tb_sel_in <= '0';
 		tb_sel_out <= '0';
 		wait for tck;
-		tb_le(3 downto 0) <= "1111";
+		tb_le(0 to 3) <= "1111";
 		wait for tck;
-		tb_le(3 downto 0) <= "0100";
+		tb_le(0 to 3) <= "0100";
 		tb_sel_in <= '1';
 		tb_sel_out <= '1';
 		wait for tck;

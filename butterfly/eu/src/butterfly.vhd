@@ -15,7 +15,8 @@ entity butterfly is
 		sf_2h_1l, start : in std_logic;
 		ina, inb : in signed(N-1 downto 0);
 		wr, wi : in signed(N-1 downto 0);
-		outa, outb : out signed(N-1 downto 0)
+		outa, outb : out signed(N-1 downto 0);
+		done : out std_logic
 	);
 
 end entity butterfly;
@@ -28,12 +29,12 @@ architecture behavioral of butterfly is
 			M : integer := 33
 		);
 		port (
-			ina, inb, wr, wi : in signed(N-1 downto 0);
 			clk, sf_2h_1l : in std_logic;
-			le : in std_logic_vector(9 downto 0);
+			ina, inb, wr, wi : in signed(N-1 downto 0);
+			le : in std_logic_vector(0 to 9);
 			sel_in, sel_out, sel_mux01, sel_mux2 : in std_logic;
-			sel_int : in std_logic_vector(2 downto 0);
-			sub_add_n, sel_mux3 : in std_logic_vector(1 downto 0);
+			sel_int : in std_logic_vector(0 to 2);
+			sub_add_n, sel_mux3 : in std_logic_vector(0 to 1);
 			outa, outb : out signed(N-1 downto 0)
 		);
 	end component eu_butterfly;
@@ -79,5 +80,7 @@ begin
 			cu_start => start,
 			cu_commands => commands
 		);
+
+	done <= commands.done;
 	
 end architecture behavioral;
