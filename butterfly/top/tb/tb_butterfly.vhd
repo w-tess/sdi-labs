@@ -73,7 +73,7 @@ begin
 		if end_sim = '1' then
 			if errors /= 0 then
 				report "simulation completed with " & 
-						integer'image(errors) & " errors.\n";
+						integer'image(errors) & " errors.";
 			else
 				report "simulation completed succesfully.";
 			end if;
@@ -145,23 +145,23 @@ begin
 
 			if act_ar /= exp_ar or act_ai /= exp_ai or
 			   act_br /= exp_br or act_bi /= exp_bi then
-				report LF & "Error on test vector:" & LF &
-					" Ar=" & integer'image(to_integer(tb_ar)) &
+				report LF & HT & "Error on test vector:" & LF &
+					HT & "Ar=" & integer'image(to_integer(tb_ar)) &
 					" Ai=" & integer'image(to_integer(tb_ai)) &
 					" Br=" & integer'image(to_integer(tb_br)) &
 					" Bi=" & integer'image(to_integer(tb_bi)) &
 					" Wr=" & integer'image(to_integer(tb_wr)) &
-					" Wi=" & integer'image(to_integer(tb_wi)) & LF &
-					"Expected:" & LF &
-					" A'r=" & integer'image(to_integer(exp_ar)) &
+					" Wi=" & integer'image(to_integer(tb_wi)) & 
+					LF & HT & "Expected:" & LF & HT &
+					"A'r=" & integer'image(to_integer(exp_ar)) &
 					" A'i=" & integer'image(to_integer(exp_ai)) &
 					" B'r=" & integer'image(to_integer(exp_br)) &
 					" B'i=" & integer'image(to_integer(exp_bi)) &
-					LF & "Actual:" & LF &
-					" A'r=" & integer'image(to_integer(act_ar)) &
+					LF & HT & "Actual:" & LF & HT & 
+					"A'r=" & integer'image(to_integer(act_ar)) &
 					" A'i=" & integer'image(to_integer(act_ai)) &
 					" B'r=" & integer'image(to_integer(act_br)) &
-					" B'i=" & integer'image(to_integer(act_bi)) & LF;
+					" B'i=" & integer'image(to_integer(act_bi));
 				errors <= errors + 1;
 			end if;
 
@@ -169,6 +169,7 @@ begin
 			exp_ar := tb_out_ar; exp_br := tb_out_br;
 			exp_ai := tb_out_ai; exp_bi := tb_out_bi;
 		end loop;
+		wait;
 	end process;
 
 

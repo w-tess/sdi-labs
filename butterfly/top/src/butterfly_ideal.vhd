@@ -57,7 +57,7 @@ begin
     s5 <= m5 - s2;
     s6 <= m6 - s4;
 
-	-- per l'arrotondamento si sfrutta il blocco 
+	-- per l'arrotondamento si sfrutta il blocco
 	-- di rounding implementato per la butterfly
     round0 : round
 		generic map(N => M)
