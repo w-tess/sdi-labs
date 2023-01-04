@@ -6,7 +6,7 @@ use std.textio.all;
 entity tb_butterfly is
 	generic(
 		ESEC_SING : boolean := True;
-		SF : std_logic := '0';
+		SF : std_logic := '1';
 		N : integer := 16;
 		M : integer := 33
 	);
@@ -89,7 +89,7 @@ begin
 	begin
 		wait for tck;
 		-- apertura file
-		file_open(vectorsfile, "test_vectors.txt");
+		file_open(vectorsfile, "bfly_vectors.txt");
 		-- termine file ? no
 		while not endfile(vectorsfile) loop
 		--   lettura line
@@ -140,7 +140,7 @@ begin
 		while end_sim = '0' loop
 			wait until falling_edge(tb_done);
 			act_ar := tb_outa; act_br := tb_outb;
-			wait on tb_outa, tb_outb;
+			wait for tck+tck/2;
 			act_ai := tb_outa; act_bi := tb_outb;
 
 			if act_ar /= exp_ar or act_ai /= exp_ai or

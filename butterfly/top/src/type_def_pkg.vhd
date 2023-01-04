@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 -- i tipi user-defined sono basati su un record
 -- che permette di definire dei campi interni,
@@ -11,6 +12,11 @@ use ieee.std_logic_1164.all;
 -- quanto è sufficiente specificare il campo del 
 -- record che si vuole assegnare
 package type_def is
+
+	type fft_t is array(Natural range <>) of signed(15 downto 0);
+
+	type done_vect_t is array(0 to 7) of std_logic;
+
 	type rom_t is
 		record
 			cc : std_logic;
@@ -25,6 +31,7 @@ package type_def is
 			rom_sub_add_n : std_logic_vector(0 to 1);
 			rom_done : std_logic;
 		end record;
+
 	type commands_t is
 		record
 			sel_in : std_logic;
@@ -37,4 +44,5 @@ package type_def is
 			sub_add_n : std_logic_vector(0 to 1);
 			done : std_logic;
 		end record;
+
 end package type_def;
