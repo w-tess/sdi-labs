@@ -7,8 +7,8 @@ entity fft_1616 is
 	port(
 		start, clk, reset_n : in std_logic;
 		samples : in fft_t(0 to 15);
-		fourth_level : out fft_t(0 to 15);
-		fourth_done : out done_vect_t
+		results : out fft_t(0 to 15);
+		done : out done_vect_t
 	);
 end entity fft_1616;
 
@@ -136,7 +136,7 @@ begin
 			wi => wi(twiddle_index(i)),
 			outa => tmp_level(2*i),
 			outb => tmp_level(2*i+1),
-			done => fourth_done(i)
+			done => done(i)
 		);
 	end generate;
 
@@ -145,7 +145,7 @@ begin
 	fifth_level_proc : process(tmp_level) is
 	begin
 		for i in tmp_level'range loop
-			fourth_level(i) <= tmp_level(reverse_index(i));
+			results(i) <= tmp_level(reverse_index(i));
 		end loop;
 	end process;
 	
