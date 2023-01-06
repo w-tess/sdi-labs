@@ -47,25 +47,27 @@ architecture test of tb_regfile is
 
 begin
 
-	DUT : regfile port map(
-		clk => tb_clk,
-		le	=> tb_le,
-		sel_int => tb_sel_int,
-		sel_in => tb_sel_in,
-		sel_out => tb_sel_out,
-		ina_ext => tb_ina_ext,
-		inb_ext => tb_inb_ext,
-		wr_ext => tb_wr_ext,
-		wi_ext => tb_wi_ext,
-		add0_outc => tb_add0_outc,
-		round0_outb => tb_round0_outb,
-		r2_q => tb_r2_q,
-		rmux0_out => tb_rmux0_out,
-		rmux1_out => tb_rmux1_out,
-		rmux2_out => tb_rmux2_out,
-		rmux3_out => tb_rmux3_out,
-		rmux4_out => tb_rmux4_out
-	);
+	DUT : regfile 
+		generic map(N => N)
+		port map(
+			clk => tb_clk,
+			le	=> tb_le,
+			sel_int => tb_sel_int,
+			sel_in => tb_sel_in,
+			sel_out => tb_sel_out,
+			ina_ext => tb_ina_ext,
+			inb_ext => tb_inb_ext,
+			wr_ext => tb_wr_ext,
+			wi_ext => tb_wi_ext,
+			add0_outc => tb_add0_outc,
+			round0_outb => tb_round0_outb,
+			r2_q => tb_r2_q,
+			rmux0_out => tb_rmux0_out,
+			rmux1_out => tb_rmux1_out,
+			rmux2_out => tb_rmux2_out,
+			rmux3_out => tb_rmux3_out,
+			rmux4_out => tb_rmux4_out
+		);
 
 	clk_gen : process is
 	begin

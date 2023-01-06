@@ -2,21 +2,25 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
--- i tipi user-defined sono basati su un record
--- che permette di definire dei campi interni,
--- ciascuno con il proprio tipo: questo migliora
--- la leggibilita' sia durante la definizione delle
--- word nelle locazioni della uROM (nonostante 
--- l'assegnazione di tipo posizionale), sia durante 
--- il passaggio dei comandi dalla CU alla EU, in 
--- quanto è sufficiente specificare il campo del 
--- record che si vuole assegnare
 package type_def is
 
-	type fft_t is array(Natural range <>) of signed(15 downto 0);
+	-- costante che definisce il parallelismo di I/O
+	-- per i dati nella FFT
+	constant IOBITS : integer := 16;
+
+	type fft_t is array(Natural range <>) of signed(IOBITS-1 downto 0);
 
 	type done_vect_t is array(0 to 7) of std_logic;
 
+	-- i tipi user-defined sono basati su un record
+	-- che permette di definire dei campi interni,
+	-- ciascuno con il proprio tipo: questo migliora
+	-- la leggibilita' sia durante la definizione delle
+	-- word nelle locazioni della uROM (nonostante 
+	-- l'assegnazione di tipo posizionale), sia durante 
+	-- il passaggio dei comandi dalla CU alla EU, in 
+	-- quanto è sufficiente specificare il campo del 
+	-- record che si vuole assegnare
 	type rom_t is
 		record
 			cc : std_logic;

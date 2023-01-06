@@ -2,12 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity eu_butterfly is  
+entity eu_butterfly is
 
-	generic (
-		N : integer := 16;
-		M : integer := 33
-	);
+	generic (N : integer := 16);
 	
 	port (
 		clk, sf_2h_1l : in std_logic;
@@ -76,25 +73,25 @@ architecture behavioral of eu_butterfly is
 		);
 	end component round;
 
-	signal ina_ext, inb_ext : signed(M-1 downto 0);
-	signal wr_ext, wi_ext : signed(M-1 downto 0);
-	signal sf0_out, sf1_out : signed(M-1 downto 0);
-	signal rmux0_out, rmux1_out, rmux2_out : signed(M-1 downto 0);
-	signal rmux3_out, rmux4_out, r2_q : signed(M-1 downto 0);
-	signal mux0_out, mux1_out : signed(M-1 downto 0);
-	signal mux2_out, mux3_out : signed(M-1 downto 0);
-	signal mpy0_mpy, mpy0_sh : signed(M-1 downto 0);
-	signal add0_outc, add1_outc : signed(M-1 downto 0);
-	signal round0_outb : signed(M-1 downto 0);
+	signal ina_ext, inb_ext : signed(2*N downto 0);
+	signal wr_ext, wi_ext : signed(2*N downto 0);
+	signal sf0_out, sf1_out : signed(2*N downto 0);
+	signal rmux0_out, rmux1_out, rmux2_out : signed(2*N downto 0);
+	signal rmux3_out, rmux4_out, r2_q : signed(2*N downto 0);
+	signal mux0_out, mux1_out : signed(2*N downto 0);
+	signal mux2_out, mux3_out : signed(2*N downto 0);
+	signal mpy0_mpy, mpy0_sh : signed(2*N downto 0);
+	signal add0_outc, add1_outc : signed(2*N downto 0);
+	signal round0_outb : signed(2*N downto 0);
 
 begin
 	-- estensione del segno per i dati in ingresso 
 	-- l'ingresso ina viene shiftato verso sinistra di 15 bit
 	-- per riallineare il dato durante le operazioni di somma
-	ina_ext <= shift_left(resize(ina, M), 15);
-	inb_ext <= resize(inb, M);
-	wr_ext  <= resize(wr, M);
-	wi_ext  <= resize(wi, M);
+	ina_ext <= shift_left(resize(ina, 2*N+1), N-1);
+	inb_ext <= resize(inb, 2*N+1);
+	wr_ext  <= resize(wr, 2*N+1);
+	wi_ext  <= resize(wi, 2*N+1);
 
 	-- scalamento per i dati in uscita
 	-- in uscita vengono assegnati i 16 MSB del dato scalato,
@@ -109,12 +106,12 @@ begin
 					 else rmux3_out;
 	sf1 : sf1_out <= shift_left(rmux4_out, 1) when sf_2h_1l = '0'
 					 else rmux4_out;
-	outb <= sf0_out(M-1 downto M-N);
-	outa <= sf1_out(M-1 downto M-N);
+	outb <= sf0_out(2*N downto N+1);
+	outa <= sf1_out(2*N downto N+1);
 
 	-- istanziazione dei componenti
 	regfile0 : regfile
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(
 			clk => clk, 
 			le => le, 
@@ -137,7 +134,7 @@ begin
 		);
 	
 	mpy0 : mpy_n
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(
 			clk => clk, 
 			ina => mux1_out,
@@ -148,7 +145,7 @@ begin
 		);
 
 	add0 : add_n
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(
 			clk => clk, 
 			sub_add_n => sub_add_n(0),
@@ -159,7 +156,7 @@ begin
 		);
 
 	add1 : add_n
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(
 			clk => clk, 
 			sub_add_n => sub_add_n(1),
@@ -170,14 +167,14 @@ begin
 		);
 
 	round0 : round
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(ina => mux3_out, outb => round0_outb);
 
 	mux0 : mux0_out <= rmux2_out when sel_mux01 = '0' 
 					   else rmux0_out;
 
 	mux1 : mux1_out <= rmux1_out when sel_mux01 = '0' 
-					   else to_signed(2, M);
+					   else to_signed(2, 2*N+1);
 	
 	mux2 : mux2_out <= rmux0_out when sel_mux2 = '0' 
 					   else r2_q;

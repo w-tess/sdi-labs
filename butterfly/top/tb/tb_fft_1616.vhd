@@ -6,14 +6,16 @@ use work.type_def.all;
 
 entity tb_fft_1616 is
 	generic(
-		NSAMPLES : integer := 8;
-		N : integer := 16
+		NSAMPLES : integer := 8
 	);
 end entity tb_fft_1616;
 
 architecture behavioral of tb_fft_1616 is
 	
 	component fft_1616 is
+		generic(
+			N : integer := 16
+		);
 		port(
 			start, clk, reset_n : in std_logic;
 			samples : in fft_t(0 to 15);
@@ -72,14 +74,14 @@ begin
 			readline(samplesfile, samplesline);
 			for i in tb_samples'range loop
 				read(samplesline, samplesi); 
-				tb_samples(i) <= to_signed(samplesi, N);
+				tb_samples(i) <= to_signed(samplesi, IOBITS);
 			end loop;
 
 			wait for tck;
 			readline(samplesfile, samplesline);
 			for i in tb_samples'range loop
 				read(samplesline, samplesi); 
-				tb_samples(i) <= to_signed(samplesi, N);
+				tb_samples(i) <= to_signed(samplesi, IOBITS);
 			end loop;
 		end loop;
 
@@ -123,6 +125,7 @@ begin
 	end process;
 
 	DUT : fft_1616 
+		generic map(N => IOBITS)
 		port map(
 			start => tb_start,
 			clk => tb_clk,

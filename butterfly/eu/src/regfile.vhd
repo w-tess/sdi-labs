@@ -52,6 +52,7 @@ begin
 	-- interni al REGFILE
 	reg_chain : for i in 0 to 9 generate
 		reg_i : reg_n
+			generic map(N => N)
 			port map(
 				d => ri_d(i),
 				clk => clk,

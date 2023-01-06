@@ -26,3 +26,6 @@ for i = 1:nrows
     if i~=nrows fprintf(f, "\n"); end
 end
 fclose(f);
+
+%% esecuzione eseguibile di "tb_butterfly.vhd"
+!tb_butterfly.exe &

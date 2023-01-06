@@ -25,6 +25,7 @@ architecture test of tb_round is
 begin
 	
 	DUT : round
+		generic map(N => N)
 		port map(
 			ina => tb_ina,
 			outb => tb_outb

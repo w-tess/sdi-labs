@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 
 entity reg_n is  
 	
-	-- N = I/O bit-width
-	-- EDGE = clock value during sample
+	-- N = parallelismo di I/O 
+	-- EDGE = valore clock durante campionamento
 	generic (
 		N : integer := 33;
 		EDGE : std_logic := '1'

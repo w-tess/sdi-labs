@@ -31,12 +31,13 @@ architecture behavioral of round is
 
 begin
 
-	addr <= unsigned(std_logic_vector(ina(N-14 downto N-17)));
+	addr <= unsigned
+		(std_logic_vector(ina(N-(N/2-2) downto N-(N/2+1))));
 
 	tmp_round <= round_rom(to_integer(addr));
 
-	outb <= ina(N-1 downto N-13) & 
+	outb <= ina(N-1 downto N-(N/2-3)) & 
 			tmp_round & 
-			ina(N-17 downto 0);
+			ina(N-(N/2+1) downto 0);
 	
 end architecture behavioral;

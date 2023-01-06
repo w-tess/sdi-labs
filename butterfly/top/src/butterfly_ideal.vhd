@@ -6,8 +6,7 @@ use work.type_def.all;
 entity butterfly_ideal is
 
 	generic(
-		N : integer := 16;
-        M : integer := 33
+		N : integer := 16
 	);
 
 	port (
@@ -39,15 +38,15 @@ architecture behavioral of butterfly_ideal is
 
 begin
 	-- estensione dei dati in ingresso
-    ar_ext <= resize(ar, M);
-    ai_ext <= resize(ai, M);
+    ar_ext <= resize(ar, 2*N+1);
+    ai_ext <= resize(ai, 2*N+1);
 
 	-- definizione degli operatori intermedi
 	-- questa parte descrive il modello ideale
-    m1 <= resize(br * wr, M);
-    m2 <= resize(bi * wi, M);
-    m3 <= resize(br * wi, M);
-    m4 <= resize(bi * wr, M);
+    m1 <= resize(br * wr, 2*N+1);
+    m2 <= resize(bi * wi, 2*N+1);
+    m3 <= resize(br * wi, 2*N+1);
+    m4 <= resize(bi * wr, 2*N+1);
     m5 <= shift_left(ar_ext, 16);  --2*ar
     m6 <= shift_left(ai_ext, 16);  --2*ai
     s1 <= shift_left(ar_ext, 15) + m1;
@@ -60,16 +59,16 @@ begin
 	-- per l'arrotondamento si sfrutta il blocco
 	-- di rounding implementato per la butterfly
     round0 : round
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(ina => s2, outb => round_ar);
     round1 : round
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(ina => s4, outb => round_ai);
     round2 : round
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(ina => s5, outb => round_br);
     round3 : round
-		generic map(N => M)
+		generic map(N => 2*N+1)
 		port map(ina => s6, outb => round_bi);
 
 	-- scalamento dei dati in uscita
@@ -77,15 +76,15 @@ begin
 		round_ar, round_ai, round_br, round_bi, sf_2h_1l
 	) begin
 		if sf_2h_1l = '0' then
-			out_ar <= round_ar(M-2 downto M-N-1);
-			out_ai <= round_ai(M-2 downto M-N-1);
-			out_br <= round_br(M-2 downto M-N-1);
-			out_bi <= round_bi(M-2 downto M-N-1);
+			out_ar <= round_ar(2*N-1 downto N);
+			out_ai <= round_ai(2*N-1 downto N);
+			out_br <= round_br(2*N-1 downto N);
+			out_bi <= round_bi(2*N-1 downto N);
 		else
-			out_ar <= round_ar(M-1 downto M-N);
-			out_ai <= round_ai(M-1 downto M-N);
-			out_br <= round_br(M-1 downto M-N);
-			out_bi <= round_bi(M-1 downto M-N);
+			out_ar <= round_ar(2*N downto N+1);
+			out_ai <= round_ai(2*N downto N+1);
+			out_br <= round_br(2*N downto N+1);
+			out_bi <= round_bi(2*N downto N+1);
 		end if;
 	end process;
 

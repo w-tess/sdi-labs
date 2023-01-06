@@ -6,8 +6,7 @@ use work.type_def.all;
 entity butterfly is
 
 	generic(
-		N : integer := 16;
-		M : integer := 33
+		N : integer := 16
 	);
 
 	port (
@@ -25,8 +24,7 @@ architecture behavioral of butterfly is
 	
 	component eu_butterfly is
 		generic (
-			N : integer := 16;
-			M : integer := 33
+			N : integer := 16
 		);
 		port (
 			clk, sf_2h_1l : in std_logic;
@@ -53,7 +51,7 @@ architecture behavioral of butterfly is
 begin
 	
 	execution_unit : eu_butterfly 
-		generic map(N => N, M => M)
+		generic map(N => N)
 		port map(
 			clk => clk,
 			sf_2h_1l => sf_2h_1l,

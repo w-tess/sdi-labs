@@ -4,20 +4,25 @@ use ieee.numeric_std.all;
 use work.type_def.all;
 
 entity fft_1616 is
+
+	generic(
+		N : integer := 16
+	);
+	
 	port(
 		start, clk, reset_n : in std_logic;
 		samples : in fft_t(0 to 15);
 		results : out fft_t(0 to 15);
 		done : out done_vect_t
 	);
+
 end entity fft_1616;
 
 architecture behavioral of fft_1616 is
 
 	component butterfly is
 		generic(
-			N : integer := 16;
-			M : integer := 33
+			N : integer := 16
 		);
 		port (
 			clk, reset_n : in std_logic;
@@ -39,16 +44,16 @@ architecture behavioral of fft_1616 is
 												1,9,5,13,3,11,7,15);
 
 	constant wr : fft_t(0 to 7) := (
-		0  => to_signed(32767, 16),  1 => to_signed(30273, 16),
-		2  => to_signed(23170, 16),  3 => to_signed(12539, 16),
-		4  => to_signed(0, 16),		 5 => to_signed(-12539, 16),
-		6  => to_signed(-23170, 16), 7 => to_signed(-30273, 16)
+		0  => to_signed(32767, N),  1 => to_signed(30273, N),
+		2  => to_signed(23170, N),  3 => to_signed(12539, N),
+		4  => to_signed(0, N),		 5 => to_signed(-12539, N),
+		6  => to_signed(-23170, N), 7 => to_signed(-30273, N)
 	);
 	constant wi : fft_t(0 to 7) := (
-		0  => to_signed(0, 16), 	 1 => to_signed(-12539, 16),
-		2  => to_signed(-23170, 16), 3 => to_signed(-30273, 16),
-		4  => to_signed(-32767, 16), 5 => to_signed(-30273, 16),
-		6  => to_signed(-23170, 16), 7 => to_signed(-12539, 16)
+		0  => to_signed(0, N), 	 1 => to_signed(-12539, N),
+		2  => to_signed(-23170, N), 3 => to_signed(-30273, N),
+		4  => to_signed(-32767, N), 5 => to_signed(-30273, N),
+		6  => to_signed(-23170, N), 7 => to_signed(-12539, N)
 	);
 	constant sf_2h_1l : std_logic_vector(0 to 3) := "1000";
 
@@ -58,7 +63,8 @@ begin
 
 	G1_0 : 
 	for i in 0 to 7 generate
-		first_chain : butterfly 
+		first_chain : butterfly
+			generic map(N => N)
 			port map(
 				clk => clk,
 				reset_n => reset_n,
@@ -81,6 +87,7 @@ begin
 		G2_1 :
 		for j in 0 to 3 generate
 			second_chain : butterfly
+			generic map(N => N)
 			port map(
 				clk => clk,
 				reset_n => reset_n,
@@ -104,6 +111,7 @@ begin
 		G3_1 :
 		for j in 0 to 1 generate
 			third_chain : butterfly
+			generic map(N => N)
 			port map(
 				clk => clk,
 				reset_n => reset_n,
@@ -125,6 +133,7 @@ begin
 	G4_0 : 
 	for i in 0 to 7 generate
 		fourth_chain : butterfly
+		generic map(N => N)
 		port map(
 			clk => clk,
 			reset_n => reset_n,

@@ -7,8 +7,7 @@ entity tb_butterfly is
 	generic(
 		ESEC_SING : boolean := True;
 		SF : std_logic := '1';
-		N : integer := 16;
-		M : integer := 33
+		N : integer := 16
 	);
 end entity tb_butterfly;
 
@@ -16,8 +15,7 @@ architecture test of tb_butterfly is
 	
 	component butterfly is
 		generic(
-			N : integer := 16;
-			M : integer := 33
+			N : integer := 16
 		);
 		port (
 			clk, reset_n : in std_logic;
@@ -31,8 +29,7 @@ architecture test of tb_butterfly is
 
 	component butterfly_ideal is
 		generic(
-			N : integer := 16;
-			M : integer := 33
+			N : integer := 16
 		);
 		port (
 			sf_2h_1l : in std_logic;
@@ -174,7 +171,7 @@ begin
 
 
 	DUT : butterfly
-		generic map(N => N, M => M)
+		generic map(N => N)
 		port map(
 			clk => tb_clk,
 			reset_n => tb_reset_n,
@@ -190,7 +187,7 @@ begin
 		);
 
 	IDEAL_MODEL : butterfly_ideal
-		generic map(N => N, M => M)
+		generic map(N => N)
 		port map(
 			sf_2h_1l => tb_sf_2h_1l,
 			ar => tb_ar,
