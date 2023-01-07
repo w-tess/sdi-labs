@@ -3,6 +3,15 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.type_def.all;
 
+-- modello ideale della butterfly, realizzato a 
+-- tramite le espressioni matematiche che 
+-- implementano la FFT
+-- il sistema e' totalmente combinatorio e sono
+-- stati implementati gli stessi accorgimenti
+-- (sign extension, rounding, scalamento) della
+-- butterfly per garantire che i due blocchi
+-- realizzati forniscano risultati identici se
+-- correttamente progettati
 entity butterfly_ideal is
 
 	generic(
@@ -47,11 +56,11 @@ begin
     m2 <= resize(bi * wi, 2*N+1);
     m3 <= resize(br * wi, 2*N+1);
     m4 <= resize(bi * wr, 2*N+1);
-    m5 <= shift_left(ar_ext, 16);  --2*ar
-    m6 <= shift_left(ai_ext, 16);  --2*ai
-    s1 <= shift_left(ar_ext, 15) + m1;
+    m5 <= shift_left(ar_ext, N);  --2*ar
+    m6 <= shift_left(ai_ext, N);  --2*ai
+    s1 <= shift_left(ar_ext, N-1) + m1;
     s2 <= s1 - m2;
-    s3 <= shift_left(ai_ext, 15) + m3;
+    s3 <= shift_left(ai_ext, N-1) + m3;
     s4 <= s3 + m4;
     s5 <= m5 - s2;
     s6 <= m6 - s4;

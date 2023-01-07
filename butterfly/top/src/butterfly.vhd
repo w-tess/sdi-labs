@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.type_def.all;
 
+-- blocco costituente la butterfly
 entity butterfly is
 
 	generic(
@@ -50,6 +51,7 @@ architecture behavioral of butterfly is
 
 begin
 	
+	-- istanziazione dell'unita' di esecuzione
 	execution_unit : eu_butterfly 
 		generic map(N => N)
 		port map(
@@ -71,6 +73,7 @@ begin
 			sub_add_n => commands.sub_add_n
 		);
 
+	-- istanziazione dell'unita' di controllo
 	control_unit : cu_butterfly
 		port map(
 			cu_clk => clk,

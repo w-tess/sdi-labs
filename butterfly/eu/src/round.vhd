@@ -19,6 +19,8 @@ architecture behavioral of round is
 
 	type round_t is array(0 to 15) of signed(2 downto 0);
 
+	-- definisco la ROM secondo una politica di
+	-- arrotondamento di tipo "round-to-nearest-even"
 	constant round_rom : round_t := (
 		"000", "000", "001", "010",	
 		"010", "010", "011", "100",
@@ -31,11 +33,21 @@ architecture behavioral of round is
 
 begin
 
+	-- se 
+	-- - N e' il parallelismo interno 
+	-- - M e' il parallelismo di I/O
+	-- - "word" indica il dato su "N" bit da arrotondare
+	-- - "word1" indica gli "M" MSB di "word"
+	-- - "word2" indica gli "N-M" LSB di "word"
+	-- allora "addr" è definito dai 3 LSB di "word1" e 
+	-- dal MSB di "word2"
 	addr <= unsigned
 		(std_logic_vector(ina(N-(N/2-2) downto N-(N/2+1))));
 
+	-- recupero i 3 LSB arrotondati
 	tmp_round <= round_rom(to_integer(addr));
 
+	-- ricompongo il dato su "N" bit
 	outb <= ina(N-1 downto N-(N/2-3)) & 
 			tmp_round & 
 			ina(N-(N/2+1) downto 0);

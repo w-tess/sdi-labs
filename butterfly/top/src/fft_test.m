@@ -77,8 +77,8 @@ if L==16
 end
 
 %% esecuzione eseguibile di "tb_fft_1616.vhd"
-if L==16 
-    !tb_fft_1616.exe
+if L==16
+    system("tb_fft_1616.exe");
 end
 %% lettura dei campioni generati dalla FFT
 if L==16
@@ -101,7 +101,7 @@ X=fftshift(X,2);
 if L==16 Y=fftshift(Y,2); end
 %% generazione dei grafici
 for i=0:1
-    if i==0 figure(1); else figure(2); end 
+    if i==0 figure(1); else figure(2); end
     for j=0:3
         subplot(4,2,2*j+1);
         hold on;
@@ -112,7 +112,7 @@ for i=0:1
         legend("Re(x)", "Im(x)");
         grid
         % grafico dello spettro in frequenza
-        subplot(4,2,2*j+2); 
+        subplot(4,2,2*j+2);
         hold on;
         stem(f, abs(X(4*i+j+1,:)));
         if L==16 stem(f, abs(Y(4*i+j+1,:))); end

@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.type_def.all;
 
--- micro_instruction register, il comportamento e' 
+-- micro-instruction register, il comportamento e' 
 -- analogo a quello del registro implementato in 
 -- "cu_reg_n.vhd" tuttavia dato che questo registro 
 -- lavora con i dati forniti da uROM, che sono di 

@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.type_def.all;
 
+-- blocco costituente la fft_16x16
 entity fft_1616 is
 
 	generic(
@@ -34,15 +35,28 @@ architecture behavioral of fft_1616 is
 		);
 	end component butterfly;
 
+	-- segnali intermedi per propagare i risultati di 
+	-- ciascun livello al livello successivo
 	signal first_level, second_level : fft_t(0 to 15);
 	signal third_level, tmp_level : fft_t(0 to 15);
 	signal first_done, second_done, third_done : done_vect_t;
 
+	-- twiddle_index e reverse_index rappresentano delle 
+	-- mappe posizionali che permettono rispettivamente di:
+	-- - assegnare correttamente i twiddle factor generati
+	--   alle corrispondenti unita' butterfly
+	-- - riordinare i dati in uscita dal quarto livello 
+	--   secondo un algoritmo di "bit-reversion", prima di
+	--   fornirli in uscita
 	type pos_t is array(Natural range <>) of integer;
 	constant twiddle_index : pos_t(0 to 7) := (0,4,2,6,1,5,3,7);
 	constant reverse_index : pos_t(0 to 15) := (0,8,4,12,2,10,6,14,
 												1,9,5,13,3,11,7,15);
 
+	-- i twiddle_factor così come il segnale di scalamento 
+	-- in uscita sono interpretati come delle costanti, di
+	-- conseguenza sono definiti all'interno della fft_16x16
+	-- e sono quindi "trasparenti" all'utente
 	constant wr : fft_t(0 to 7) := (
 		0  => to_signed(32767, N),  1 => to_signed(30273, N),
 		2  => to_signed(23170, N),  3 => to_signed(12539, N),
@@ -58,6 +72,10 @@ architecture behavioral of fft_1616 is
 	constant sf_2h_1l : std_logic_vector(0 to 3) := "1000";
 
 begin
+
+-- dato che con 16 campioni in ingresso, sono necessarie 4
+-- catene di butterfly per fornire i 16 risultati in uscita,
+-- ciascun livello viene implementato tramite un generate  
 
 ---------------------- PRIMO  LIVELLO ---------------------
 
@@ -148,6 +166,11 @@ begin
 			done => done(i)
 		);
 	end generate;
+
+-- le uscite della fft_16x16 non sono in ordine crescente ma
+-- vanno riordinate tramite un meccanismo di "bit-reversion":
+-- se tale riordinamento non venisse implementato, lo spettro
+-- rappresentato non risulterebbe coerente
 
 ----------------- BIT-REVERSAL REORDERING -----------------
 

@@ -7,7 +7,7 @@ entity urom is
 	
 	-- uROM
 	-- addr riceve i tre MSB dello stato futuro, che e' composto 
-	-- da 4 bit even_out e odd_out sono le due uscite della rom,
+	-- da 4 bit; even_out e odd_out sono le due uscite della rom,
 	-- che vanno al mux per la selezione dello stato tramite 
 	-- l'LSB dello stato futuro
 	port(

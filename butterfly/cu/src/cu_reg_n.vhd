@@ -1,11 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+-- micro-address register
 entity cu_reg_n is
 	
-	-- N = I/O bit-width
-	-- RST_V = reset value to reset
-	-- CLK_V = clock value to sample
+	-- N = parallelismo di I/O 
+	-- RST_V = valore di reset per resettare
+	-- CLK_V = valore del clock per campionare
 	generic (
 		N : integer := 8;
 		RST_V : std_logic := '1';

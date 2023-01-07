@@ -3,7 +3,19 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use std.textio.all;
 
+-- testbench della butterfly
+-- il testbench e' realizzato leggendo dei vettori
+-- di test da file e fornendoli alla butterfly da 
+-- testare ed al modello di confronto ideale
+-- i 4 dati in uscita dai due blocchi vengono 
+-- confrontati a coppie e se non risultano identici
+-- viene fornito un messaggio di errore in output
+-- ed incrementato un contatore che indica il numero
+-- di errori totali a fine simulazione
 entity tb_butterfly is
+	-- ESEC_SING = test in esecuzione singola/continua
+	-- SF = fattore di scalamento
+	-- N = parallelismo di I/O
 	generic(
 		ESEC_SING : boolean := True;
 		SF : std_logic := '1';
@@ -54,6 +66,7 @@ architecture test of tb_butterfly is
 
 begin
 	
+	-- processo di initializzazione della butterfly
 	initialize : process is
 	begin
 		tb_reset_n <= '0'; tb_sf_2h_1l <= SF;
@@ -62,6 +75,7 @@ begin
 		wait;
 	end process;
 
+	-- processo di generazione del clock
 	clock_control : process is
 	begin
 		tb_clk <= not tb_clk;
@@ -78,6 +92,8 @@ begin
 		end if;
 	end process;
 
+	-- processo di lettura dei vettori di test e
+	-- generazione degli stimoli
 	input_control : process is
 		file vectorsfile : text;
 		variable vectorsline : line;
@@ -85,13 +101,13 @@ begin
 		variable first_pass : boolean := True;
 	begin
 		wait for tck;
-		-- apertura file
+		-- apro il file con i vettori di test
 		file_open(vectorsfile, "bfly_vectors.txt");
-		-- termine file ? no
+		-- loop in cui svolgo le operazioni di lettura
 		while not endfile(vectorsfile) loop
-		--   lettura line
+			-- lettura line
 			readline(vectorsfile, vectorsline);
-		--   lettura dati
+			-- assegnazione dati 
 			read(vectorsline, ari); tb_ar <= to_signed(ari, N);
 			read(vectorsline, aii); tb_ai <= to_signed(aii, N);
 			read(vectorsline, bri); tb_br <= to_signed(bri, N);
@@ -102,12 +118,16 @@ begin
 				first_pass := false;
 			end if;
 
+			-- sospendo il processo in modo da terminare il ciclo
+			-- delta corrente ed aggiornare i segnali assegnati
+			-- il processo riprende quando i dati sono cambiati
+			-- ed assegna alla butterfly i nuovi valori
 			wait on tb_ar, tb_ai, tb_br, tb_bi, tb_wr, tb_wi;
 			tb_start <= '1', '0' after tck;
 			tb_ina <= tb_ar after tck, tb_ai after 2*tck;
 			tb_inb <= tb_br after tck, tb_bi after 2*tck;
 
-		--   esec_cont ? aspetto n cicli : aspetto done
+			-- attendo che la butterfly termini l'esecuzione
 			if ESEC_SING then
 				wait for 10*tck;
 			else
@@ -115,6 +135,8 @@ begin
 			end if;
 		end loop;
 	
+		-- in esecuzione continua ho bisogno di attendere ancora
+		-- qualche ciclo per recuperare l'ultimo risultato
 		if not ESEC_SING then
 			wait for 4*tck;
 		end if;
@@ -124,22 +146,33 @@ begin
 		wait;
 	end process;
 
+	-- processo di lettura delle uscite e confronto dei risultati
 	results_control : process is
 		variable act_ar, act_br : signed(N-1 downto 0);
 		variable act_ai, act_bi : signed(N-1 downto 0);
 		variable exp_ar, exp_br : signed(N-1 downto 0);
 		variable exp_ai, exp_bi : signed(N-1 downto 0);
 	begin
+		-- recupero le uscite della butterfly ideale (totalmente
+		-- combinatoria, quindi le uscite sono disponibili quasi
+		-- subito)
 		wait until falling_edge(tb_start);
 		exp_ar := tb_out_ar; exp_br := tb_out_br;
 		exp_ai := tb_out_ai; exp_bi := tb_out_bi;
 
+		-- loop in cui svolgo le operazioni di confronto tra 
+		-- i risultati ideali e quelli della butterfly 
 		while end_sim = '0' loop
+			-- aspetto che la butterfly termini un esecuzione
+			-- quindi recupero le uscite fornite
 			wait until falling_edge(tb_done);
 			act_ar := tb_outa; act_br := tb_outb;
 			wait for tck+tck/2;
 			act_ai := tb_outa; act_bi := tb_outb;
 
+			-- confronto le uscite a coppie: se ci sono discordanze
+			-- stampo un errore in output indicando il vettore di test
+			-- e i risultati ideali e attuali
 			if act_ar /= exp_ar or act_ai /= exp_ai or
 			   act_br /= exp_br or act_bi /= exp_bi then
 				report LF & HT & "Error on test vector:" & LF &
@@ -162,6 +195,7 @@ begin
 				errors <= errors + 1;
 			end if;
 
+			-- recupero le uscite ideali del prossimo vettore
 			wait for tck;
 			exp_ar := tb_out_ar; exp_br := tb_out_br;
 			exp_ai := tb_out_ai; exp_bi := tb_out_bi;

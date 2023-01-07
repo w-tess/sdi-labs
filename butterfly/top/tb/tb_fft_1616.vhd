@@ -4,6 +4,16 @@ use ieee.numeric_std.all;
 use std.textio.all;
 use work.type_def.all;
 
+-- testbench della fft_16x16
+-- il testbench riceve dei campioni relativi ad 8 
+-- funzioni di test non casuali ma interpretabili
+-- (sinusoidi, onda quadra, onda triangolare ...)
+-- di cui si conosce bene lo spettro; i campioni
+-- vengono quindi forniti alla fft che genera lo 
+-- spettro corrispondente
+-- i risultati ottenuti infine, sono scritti su
+-- un file e confrontati con lo spettro generato 
+-- tramite uno script MATLAB
 entity tb_fft_1616 is
 	generic(
 		NSAMPLES : integer := 8
@@ -35,6 +45,7 @@ architecture behavioral of tb_fft_1616 is
 
 begin
 	
+	-- processo di inizializzazione della fft_16x16
 	initialize : process is
 	begin
 		tb_reset_n <= '0';
@@ -43,6 +54,7 @@ begin
 		wait;
 	end process;
 
+	-- processo di generazione del clock
 	clock_gen : process
 	begin
 		tb_clk <= not tb_clk;
@@ -54,6 +66,7 @@ begin
 		end if;
 	end process;
 
+	-- processo di generazione del segnale di start
 	start_gen : process
 	begin
 		tb_start <= '1', '0' after tck;
@@ -62,15 +75,20 @@ begin
 		if end_sim = '1' then wait; end if;
 	end process;
 
+	-- processo di lettura dei campioni e generazione 
+	-- degli stimoli per la fft
 	samples_gen : process
 		file samplesfile : text;
 		variable samplesline : line;
 		variable samplesi : integer;
 	begin
+		-- apro il file con i campioni
 		file_open(samplesfile, "fft_vectors.txt");
 
+		-- loop in cui svolgo le operazioni di lettura
 		while not endfile(samplesfile) loop
 			wait until falling_edge(tb_start);
+			-- lettura dei 16 campioni reali			
 			readline(samplesfile, samplesline);
 			for i in tb_samples'range loop
 				read(samplesline, samplesi); 
@@ -78,6 +96,7 @@ begin
 			end loop;
 
 			wait for tck;
+			-- lettura dei 16 campioni immaginari
 			readline(samplesfile, samplesline);
 			for i in tb_samples'range loop
 				read(samplesline, samplesi); 
@@ -85,10 +104,13 @@ begin
 			end loop;
 		end loop;
 
+		-- chiudo il file di lettura
 		file_close(samplesfile);
 		wait;
 	end process;
 
+	-- processo di lettura dei risultati e scrittura
+	-- dei campioni su file
 	results_gen : process
 		file resultsfile : text;
 		variable resultsline : line;
@@ -97,8 +119,12 @@ begin
 		file_open(resultsfile, "fft_results.txt", write_mode);
 
 		for cnt in 0 to NSAMPLES-1 loop
+			-- aspetto che la fft_16x16 termini l'esecuzione
 			wait until falling_edge(tb_done(0));
 			wait for tck/2;
+			-- lettura dei campioni reali, dato che i risultati in
+			-- uscita sono scalati di un fattore SF, moltiplico
+			-- ciascuna uscita per SF per ottenere il dato corretto
 			for i in tb_results'range loop
 				resultsi := to_integer(tb_results(i));
 				resultsi := resultsi * SF;
@@ -106,7 +132,8 @@ begin
 				write(resultsline, ' ');
 			end loop;
 			writeline(resultsfile, resultsline);
-
+			
+			-- lettura dei campioni immaginari
 			wait for tck;
 			for i in tb_results'range loop
 				resultsi := to_integer(tb_results(i));
@@ -115,10 +142,9 @@ begin
 				write(resultsline, ' ');
 			end loop;
 			writeline(resultsfile, resultsline);
-
-			wait for tck;
 		end loop;
 
+		-- chiudo il file di scrittura
 		file_close(resultsfile);
 		end_sim <= '1';
 		wait;

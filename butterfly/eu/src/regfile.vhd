@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity regfile is
 	
-	-- N = I/O bit-width
+	-- N = parallelismo di I/O
 	generic (
 		N : integer := 33
 	);
