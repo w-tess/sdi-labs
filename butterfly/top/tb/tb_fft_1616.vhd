@@ -37,9 +37,11 @@ architecture behavioral of tb_fft_1616 is
 	signal tb_start, tb_reset_n : std_logic;
 	signal tb_samples, tb_results : fft_t(0 to 15);
 	signal tb_clk : std_logic := '1';
-	signal end_sim : std_logic := '0';
 	signal tb_done : done_vect_t;
+	signal end_sim : std_logic := '0';
 
+	-- SF ripristina i campioni dello spettro generato
+	-- moltiplicandoli per 32
 	constant SF : integer := 2**5;
 	constant tck : time := 10 ns;
 
