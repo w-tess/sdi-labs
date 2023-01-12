@@ -5,17 +5,16 @@ use std.textio.all;
 use work.type_def.all;
 
 -- testbench della fft_16x16
--- il testbench riceve dei campioni relativi ad 8 
--- funzioni di test non casuali ma interpretabili
--- (sinusoidi, onda quadra, onda triangolare ...)
--- di cui si conosce bene lo spettro; i campioni
--- vengono quindi forniti alla fft che genera lo 
--- spettro corrispondente
--- i risultati ottenuti infine, sono scritti su
--- un file e confrontati con lo spettro generato 
--- tramite uno script MATLAB
+-- il testbench riceve i campioni relativi ad 8 funzioni
+-- di test non casuali ma interpretabili (sinusoidi, onda
+-- quadra, onda triangolare ...) e di cui si conosce bene
+-- lo spettro; i campioni vengono quindi forniti alla fft
+-- che genera lo spettro corrispondente.
+-- i risultati ottenuti infine, sono scritti su un file e
+-- confrontati con lo spettro generato da uno script MATLAB
 entity tb_fft_1616 is
 	generic(
+		-- numero di funzioni di test
 		NSAMPLES : integer := 8
 	);
 end entity tb_fft_1616;
