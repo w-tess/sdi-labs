@@ -75,15 +75,19 @@ architecture behavioral of audio_proc is
 		);
 	end component cu_audio_proc;
 
-    signal x_n_ext, sat0_out, mux0_out : signed(11 downto 0);
+    signal round0_out, sat0_out, mux0_out : signed(11 downto 0);
     signal low_shelv_out, high_shelv_out : signed(11 downto 0);
-    signal round0_out : signed(11 downto 0);
+    signal x_n_ext, x_n_scaled : signed(11 downto 0);
     signal le1, le2, le3, rst, done : std_logic;
    
 begin
     
     -- estendo il dato su 12 bit
     x_n_ext <= resize(x_n, 12);
+    -- scalo verso sinistra il dato nel caso di loop-back,
+    -- in questo modo lo scalamento verso destra in uscita
+    -- mi fornisce lo stesso dato ricevuto 
+    x_n_scaled <= shift_left(x_n_ext, 3);
 
     low_shelv : shelving_filter
         port map(
@@ -122,11 +126,11 @@ begin
     -- altrimenti,
     -- se sw(1)=0: low-shelving
     -- se sw(1)=1: high-shelving
-    mux0 : mux0_out <= x_n_ext        when sw = "00" else
-                       x_n_ext        when sw = "01" else
+    mux0 : mux0_out <= x_n_scaled     when sw = "00" else
+                       x_n_scaled     when sw = "01" else
                        low_shelv_out  when sw = "10" else
                        high_shelv_out when sw = "11" else
-                       x_n_ext;
+                       x_n_scaled;
 
     round0 : round
         port map(

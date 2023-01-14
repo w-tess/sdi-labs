@@ -1,7 +1,7 @@
 %% script per la simulazione dell'audio processor
 %% definizione dei parametri per i filtri
 close all;
-V0=1/4; % amplificazione/attenuazione
+V0=1/3; % amplificazione/attenuazione
 G = 20*log10(V0); % guadagno in dB
 fc = 4000; % frequenza di taglio
 Fs = 32000; % frequenza di campionamento
@@ -92,7 +92,11 @@ system("tb_audio_proc.exe");
 resultsf = fopen("shelving_results.txt", "r");
 y1 = fscanf(resultsf, "%d ", [1 size(x,2)]);
 % normalizzo i risultati ottenuti
-y1 = y1/(2^8);
+if SW==2 || SW==3 
+    y1 = y1/(2^(8-3));
+else 
+    y1=y1/((2^7-1)*2);
+end
 fclose(resultsf);
 
 %% generazione risultati del filtro su MATLAB
@@ -105,10 +109,10 @@ end
 figure(1);
 hold on
 plot(t, x);
-if SW==2 || SW==3 plot(t, y0); end
 plot(t, y1);
+if SW==2 || SW==3 plot(t, y0); end
 hold off
-legend('x', 'MATLAB', 'audio\_proc');
+legend('x', 'audio\_proc', 'MATLAB');
 title("Simulazione audio\_proc: " + ...
       "f=" + num2str(f) + ...
       "Hz, fc=" + num2str(fc) + ...

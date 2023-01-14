@@ -60,6 +60,7 @@ begin
 
 	tb_rst_n <= '0', '1' after tck/10;
 
+	-- processo di generazione del clock
 	clock_gen : process is
 	begin
 		tb_clk <= not tb_clk;
@@ -71,6 +72,8 @@ begin
 		end if;
 	end process;
 
+	-- processo di lettura dei coefficienti per i due 
+	-- filtri shelving e del valore per l'ingresso sw
 	coeff_gen : process is
 		file coefffile : text;
 		variable coeffline : line;
@@ -80,6 +83,7 @@ begin
 
 		wait for tck;
 
+		-- leggo i coefficienti e genero gli stimoli
 		readline(coefffile, coeffline);
 		read(coeffline, coeffi); tb_a1_L <= to_signed(coeffi, 12);
 		read(coeffline, coeffi); tb_a2_L <= to_signed(coeffi, 12);
@@ -91,6 +95,7 @@ begin
 		read(coeffline, coeffi); tb_b0_H <= to_signed(coeffi, 12);
 		read(coeffline, coeffi); tb_b1_H <= to_signed(coeffi, 12);
 		read(coeffline, coeffi); tb_b2_H <= to_signed(coeffi, 12);
+		-- leggo il valore da assegnare all'ingresso sw
 		readline(coefffile, coeffline);
 		read(coeffline, coeffi);
 		tb_sw <= std_logic_vector(to_signed(coeffi, 2));
@@ -99,6 +104,8 @@ begin
 		wait;
 	end process;
 
+	-- processo di lettura da file dei campioni in ingresso e 
+	-- di scrittura su file dei risultati in uscita
 	data_gen : process
 		file samplesfile, resultsfile : text;
 		variable samplesline, resultsline : line;
@@ -120,7 +127,6 @@ begin
 
 			wait for 3*tck;
 			resultsi := to_integer(tb_y_n);
-			resultsi := resultsi * SF;
 			write(resultsline, resultsi);
 			writeline(resultsfile, resultsline);
 		end loop;
