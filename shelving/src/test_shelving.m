@@ -1,14 +1,14 @@
 %% script per la simulazione dell'audio processor
 %% definizione dei parametri per i filtri
 close all;
-V0=1/3; % amplificazione/attenuazione
+V0=2; % amplificazione/attenuazione
 G = 20*log10(V0); % guadagno in dB
 fc = 4000; % frequenza di taglio
 Fs = 32000; % frequenza di campionamento
 f = 2000; % frequenza dell'onda
 Q = 1; % fattore di qualita'
 N = 1000; % numero di campioni
-SW = 2; % modalita' operativa
+SW = 3; % modalita' operativa
 t = 0:1/Fs:(N-1)/Fs; % campioni temporali
 
 %% definizione campioni
@@ -119,3 +119,11 @@ title("Simulazione audio\_proc: " + ...
       "Hz, fs=" + num2str(Fs) + ...
       "Hz, V0=" + num2str(V0) + ...
       ", SW=" + num2str(SW))
+
+%% SEZIONE PER TEST SU VIRTLAB 
+% rappresentazione primi 10 campioni in esadecimale
+% insieme ai primi 10 campioni dei filtri
+x_hex = dec2hex(round(x(1:9)*(2^7-1)*2));
+if SW==2 || SW==3
+    y0_hex = dec2hex(round(y0(1:9)*(2^(8-3))));
+end

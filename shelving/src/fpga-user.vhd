@@ -107,7 +107,7 @@ architecture behavioural of user is
 	signal s_data_tx, s_data_rx : signed(7 downto 0);
 	signal valid_rx, done_tx : std_logic;
 	-- constant signals representing the coefficients for the
-	-- two shelving filters
+	-- two shelving filters (case of V0=2, fc=4 kHz, Fs=32 kHz)
 	constant a1_L : signed(11 downto 0) := to_signed(-267, 12);
 	constant a2_L : signed(11 downto 0) := to_signed(122, 12);
 	constant b0_L : signed(11 downto 0) := to_signed(311, 12);

@@ -19,7 +19,20 @@ end entity audio_proc;
 
 architecture behavioral of audio_proc is
 
-    component d_ff is
+    component s_reg_n is  
+        generic (
+            N : integer := 12;
+            RST_V : std_logic := '1';
+            CLK_V : std_logic := '1'
+        );
+        port (
+            d_in : in signed(N-1 downto 0);   
+            rst, clk, en : in std_logic;   
+            d_out : out signed(N-1 downto 0)
+        );   
+    end component s_reg_n; 
+
+    component shelv_d_ff is
         generic(
             RST_V : std_logic := '1';
             CLK_V : std_logic := '1'
@@ -29,7 +42,7 @@ architecture behavioral of audio_proc is
             rst, en : in std_logic;
             d_out : out std_logic
         );
-    end component d_ff;
+    end component shelv_d_ff;
 
     component round is
         generic(
@@ -77,7 +90,7 @@ architecture behavioral of audio_proc is
 
     signal round0_out, sat0_out, mux0_out : signed(11 downto 0);
     signal low_shelv_out, high_shelv_out : signed(11 downto 0);
-    signal x_n_ext, x_n_scaled : signed(11 downto 0);
+    signal x_n_ext, x_n_scaled, reg0_out : signed(11 downto 0);
     signal le1, le2, le3, rst, done : std_logic;
    
 begin
@@ -88,6 +101,15 @@ begin
     -- in questo modo lo scalamento verso destra in uscita
     -- mi fornisce lo stesso dato ricevuto 
     x_n_scaled <= shift_left(x_n_ext, 3);
+
+    reg0 : s_reg_n
+        port map(
+            d_in => x_n_scaled,
+            rst => rst,
+            clk => clk,
+            en => le1,
+            d_out => reg0_out
+        );
 
     low_shelv : shelving_filter
         port map(
@@ -126,11 +148,11 @@ begin
     -- altrimenti,
     -- se sw(1)=0: low-shelving
     -- se sw(1)=1: high-shelving
-    mux0 : mux0_out <= x_n_scaled     when sw = "00" else
-                       x_n_scaled     when sw = "01" else
+    mux0 : mux0_out <= reg0_out       when sw = "00" else
+                       reg0_out       when sw = "01" else
                        low_shelv_out  when sw = "10" else
                        high_shelv_out when sw = "11" else
-                       x_n_scaled;
+                       reg0_out;
 
     round0 : round
         port map(
@@ -151,12 +173,12 @@ begin
     -- MSB sono relativi alla parte intera
     y_n <= sat0_out(10 downto 3);
 
-    dff0 : d_ff
+    dff0 : shelv_d_ff
     port map(
         d_in => done,
         clk => clk,
         rst => rst,
-        en => le2,
+        en => '1',
         d_out => vout
     );
 

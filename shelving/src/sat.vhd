@@ -21,7 +21,7 @@ begin
 	
 	-- processo per saturare il dato filtrato
 	sat_proc : process(ina) is
-		variable maxval : signed(N-1 downto 0) 
+		constant maxval : signed(N-1 downto 0) 
 				        := to_signed(MAX, N);
 	begin
 		-- caso di saturazione positiva

@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity d_ff is
+entity shelv_d_ff is
 
 	generic(
 		RST_V : std_logic := '1';
@@ -14,16 +14,16 @@ entity d_ff is
 		d_out : out std_logic
 	);
 
-end entity d_ff;
+end entity shelv_d_ff;
 
-architecture behavioral of d_ff is
+architecture behavioral of shelv_d_ff is
 begin
 
 	process (clk) is
 	begin
 		if (clk'event and clk = CLK_V) then
 			if (rst = RST_V) then
-				d_out <= '1';
+				d_out <= '0';
 			elsif (en = '1') then
 				d_out <= d_in;
 			end if;
