@@ -6,12 +6,12 @@ use ieee.numeric_std.all;
 entity s_adder_n is
 
 	generic (
-		N : integer := 8
+		N : integer := 12
 	);
 
 	port (
-		ina, inb: in signed(N-1 downto 0);
-		outc: out signed(N-1 downto 0)
+		ina, inb : in signed(N-1 downto 0);
+		outc : out signed(N-1 downto 0)
 	);
 
 end entity s_adder_n;

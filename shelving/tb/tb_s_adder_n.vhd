@@ -10,7 +10,7 @@ architecture test of tb_s_adder_n is
 	component s_adder_n is
 
 		generic (
-			N : integer := 8
+			N : integer := 12
 		);
 	
 		port (
@@ -20,17 +20,18 @@ architecture test of tb_s_adder_n is
 	
 	end component s_adder_n;
 
-	signal tb_ina, tb_inb : signed(7 downto 0);
-	signal tb_outc : signed(7 downto 0);
+	signal tb_ina, tb_inb : signed(11 downto 0);
+	signal tb_outc : signed(11 downto 0);
 
 begin
 	
-	DUT : s_adder_n port map(ina => tb_ina, inb => tb_inb, outc => tb_outc);
+	DUT : s_adder_n 
+		port map(ina => tb_ina, inb => tb_inb, outc => tb_outc);
 
-	tb_ina <= X"A1", X"37" after 5 ns, X"C9" after 10 ns,
-				  X"1F" after 15 ns, X"DA" after 20 ns;
+	tb_ina <= X"AC1", X"B37" after 5 ns, X"8C9" after 10 ns,
+				  	  X"16F" after 15 ns, X"3DA" after 20 ns;
 
-	tb_inb <= X"23", X"F1" after 5 ns, X"60" after 10 ns,
-				  X"35" after 15 ns, X"05" after 20 ns;
+	tb_inb <= X"023", X"1F1" after 5 ns, X"460" after 10 ns,
+				  	  X"335" after 15 ns, X"905" after 20 ns;
 	
 end architecture test;

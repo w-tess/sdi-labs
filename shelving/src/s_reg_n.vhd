@@ -9,7 +9,7 @@ entity s_reg_n is
 	-- RST_V = reset value on reset
 	-- CLK_V = clock value during sample
 	generic (
-		N : integer := 8;
+		N : integer := 12;
 		RST_V : std_logic := '1';
 		CLK_V : std_logic := '1'
 	);
