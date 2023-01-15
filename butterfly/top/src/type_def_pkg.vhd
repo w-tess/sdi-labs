@@ -19,7 +19,7 @@ package type_def is
 	-- word nelle locazioni della uROM (nonostante 
 	-- l'assegnazione di tipo posizionale), sia durante 
 	-- il passaggio dei comandi dalla CU alla EU, in 
-	-- quanto è sufficiente specificare il campo del 
+	-- quanto e' sufficiente specificare il campo del 
 	-- record che si vuole assegnare
 	type rom_t is
 		record
