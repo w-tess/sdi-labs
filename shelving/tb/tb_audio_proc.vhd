@@ -30,9 +30,6 @@ architecture test of tb_audio_proc is
 	signal tb_clk : std_logic := '1';
 	signal end_sim : std_logic := '0';
 
-	-- SF ripristina i campioni forniti dal filtro shelving
-	-- che sono stati scalati di 3 bit in uscita
-	constant SF : integer := 2**3;
 	constant tck : time := 10 ns;
 
 begin
