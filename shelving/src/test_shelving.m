@@ -21,51 +21,6 @@ type = 'Base_Shelf';
 type = 'Treble_Shelf';
 [bh, ah] = shelving(G, fc, Fs, Q, type);
 
-%% evoluzione operatori interni al filtro A(z) nel tempo
-% caso low-shelving
-[S0,S1,S2,S3,S4,S5,M0,M1,M2,M3,M4,M5,R0,R1]=deal(zeros(1,length(t)));
-for i=1:length(t)
-    M1(i)=R0(i)*al(2);
-    M2(i)=R0(i)*bl(2);
-    M3(i)=R1(i)*al(3);
-    M4(i)=R1(i)*bl(3);
-    S2(i)=M1(i)+M3(i);
-    S3(i)=M2(i)+M4(i);
-    S0(i)= x(i)-S2(i);
-    M0(i)=S0(i)*bl(1);
-    S1(i)=M0(i)+S3(i);
-
-    if i~=length(t) 
-        R1(i+1)=R0(i); 
-        R0(i+1)=S0(i);
-    end
-end
-operands = [S0;S1;S2;S3;S4;S5;M0;M1;M2;M3;M4;M5;R0;R1];
-maxval_low = max(operands, [], 'all');
-minval_low = min(operands, [], 'all');
-
-% caso high-shelving
-[S0,S1,S2,S3,S4,S5,M0,M1,M2,M3,M4,M5,R0,R1]=deal(zeros(1,length(t)));
-for i=1:length(t)
-    M1(i)=R0(i)*ah(2);
-    M2(i)=R0(i)*bh(2);
-    M3(i)=R1(i)*ah(3);
-    M4(i)=R1(i)*bh(3);
-    S2(i)=M1(i)+M3(i);
-    S3(i)=M2(i)+M4(i);
-    S0(i)= x(i)-S2(i);
-    M0(i)=S0(i)*bh(1);
-    S1(i)=M0(i)+S3(i);
-
-    if i~=length(t) 
-        R1(i+1)=R0(i); 
-        R0(i+1)=S0(i);
-    end
-end
-operands = [S0;S1;S2;S3;S4;S5;M0;M1;M2;M3;M4;M5;R0;R1];
-maxval_high = max(operands, [], 'all');
-minval_high = min(operands, [], 'all');
-
 %% stampa dei coefficienti su file
 coeff = [al(2:end) bl ah(2:end) bh];
 coefff = fopen("shelving_coefficients.txt", "w");
@@ -105,6 +60,7 @@ if SW==2
 elseif SW==3
     y0 = filter(bh,ah, x);
 end
+
 %% generazione grafici con i risultati ottenuti
 figure(1);
 hold on
