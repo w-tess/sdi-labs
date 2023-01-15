@@ -34,7 +34,7 @@ begin
 		end if;
 	end process pipe_mpy;
 
-	-- l'uscita sh è disponibile subito
+	-- l'uscita sh e' disponibile subito
 	sh <= tmp_mpy(N-1 downto 0);
 
 end architecture behavioral;

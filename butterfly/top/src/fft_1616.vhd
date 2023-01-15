@@ -53,7 +53,7 @@ architecture behavioral of fft_1616 is
 	constant reverse_index : pos_t(0 to 15) := (0,8,4,12,2,10,6,14,
 												1,9,5,13,3,11,7,15);
 
-	-- i twiddle_factor così come il segnale di scalamento 
+	-- i twiddle_factor cosi' come il segnale di scalamento 
 	-- in uscita sono interpretati come delle costanti, di
 	-- conseguenza sono definiti all'interno della fft_16x16
 	-- e sono quindi "trasparenti" all'utente

@@ -6,7 +6,7 @@ use work.type_def.all;
 -- analogo a quello del registro implementato in 
 -- "cu_reg_n.vhd" tuttavia dato che questo registro 
 -- lavora con i dati forniti da uROM, che sono di 
--- tipo "rom_t", era più comodo realizzare una 
+-- tipo "rom_t", era piu' comodo realizzare una 
 -- soluzione specifica che convertire tutto dal 
 -- tipo "rom_t" a std_logic_vector
 entity uir is
