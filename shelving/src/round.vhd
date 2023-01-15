@@ -39,7 +39,7 @@ begin
 	-- - "word" indica il dato su "N" bit da arrotondare
 	-- - "word1" indica gli "M" MSB di "word"
 	-- - "word2" indica gli "N-M" LSB di "word"
-	-- allora "addr" è definito dai 3 LSB di "word1" e 
+	-- allora "addr" e' definito dai 3 LSB di "word1" e 
 	-- dal MSB di "word2"
 	addr <= unsigned
 		(std_logic_vector(ina(N-(N/2+1) downto N-(N/2+4))));
