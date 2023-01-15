@@ -77,8 +77,8 @@ title("Simulazione audio\_proc: " + ...
       ", SW=" + num2str(SW))
 
 %% SEZIONE PER TEST SU VIRTLAB 
-% rappresentazione primi 10 campioni in esadecimale
-% insieme ai primi 10 campioni dei filtri
+% rappresentazione primi 9 campioni in esadecimale
+% insieme ai primi 9 campioni dei filtri
 x_hex = dec2hex(round(x(1:9)*(2^7-1)*2));
 if SW==2 || SW==3
     y0_hex = dec2hex(round(y0(1:9)*(2^(8-3))));
