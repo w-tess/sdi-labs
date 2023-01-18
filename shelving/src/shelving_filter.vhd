@@ -14,19 +14,6 @@ end entity shelving_filter;
 
 architecture behavioral of shelving_filter is
 
-	component s_reg_n is  
-		generic (
-			N : integer := 12;
-			RST_V : std_logic := '1';
-			CLK_V : std_logic := '1'
-		);
-		port (
-			d_in : in signed(N-1 downto 0);
-			rst, clk, en : in std_logic;   
-			d_out : out signed(N-1 downto 0)
-		);		
-	end component s_reg_n; 
-
 	component s_adder_n is
 		generic (
 			N : integer := 12
@@ -46,6 +33,19 @@ architecture behavioral of shelving_filter is
 			outc : out signed(N-1 downto 0)
 		);
 	end component s_multiplier_n;
+
+	component s_reg_n is  
+		generic (
+			N : integer := 12;
+			RST_V : std_logic := '1';
+			CLK_V : std_logic := '1'
+		);
+		port (
+			d_in : in signed(N-1 downto 0);
+			rst, clk, en : in std_logic;   
+			d_out : out signed(N-1 downto 0)
+		);		
+	end component s_reg_n; 
 
 	type mpy_t is array(0 to 4) of signed(11 downto 0);
 	-- uscite dei moltiplicatori
