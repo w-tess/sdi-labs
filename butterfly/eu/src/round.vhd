@@ -42,14 +42,14 @@ begin
 	-- allora "addr" e' definito dai 3 LSB di "word1" e 
 	-- dal MSB di "word2"
 	addr <= unsigned
-		(std_logic_vector(ina(N-(N/2-2) downto N-(N/2+1))));
+		(std_logic_vector(ina(N-(N/2-1) downto N-(N/2+2))));
 
 	-- recupero i 3 LSB arrotondati
 	tmp_round <= round_rom(to_integer(addr));
 
 	-- ricompongo il dato su "N" bit
-	outb <= ina(N-1 downto N-(N/2-3)) & 
+	outb <= ina(N-1 downto N-(N/2-2)) & 
 			tmp_round & 
-			ina(N-(N/2+1) downto 0);
+			ina(N-(N/2+2) downto 0);
 	
 end architecture behavioral;

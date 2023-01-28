@@ -2,18 +2,18 @@
 %  costituito da 6 valori rappresentati da interi
 %  su 16 bit, nel range +/- (2^15-1)
 MAX=2^15-1;
-randvect = randi([-MAX, MAX], 10000, 6, "int16");
+randvect = randi([-MAX-1, MAX], 10000, 6, "int16");
 
 %% definizione di vettori di test personali
 custvect = zeros(8,6);
 custvect(1,:) = MAX;
-custvect(2,:) = -MAX;
+custvect(2,:) = -MAX-1;
 custvect(3,:) = 0;
-custvect(4,:) = MAX; custvect(4,6) = -MAX;
-custvect(5,:) = MAX; custvect(5,4) = -MAX;
-custvect(6,:) = MAX; custvect(6,3) = -MAX;
-custvect(7,:) = MAX; custvect(7,3:4) = -MAX;
-custvect(8,:) = MAX; custvect(8,2) = -MAX;
+custvect(4,:) = MAX; custvect(4,6) = -MAX-1;
+custvect(5,:) = MAX; custvect(5,4) = -MAX-1;
+custvect(6,:) = MAX; custvect(6,3) = -MAX-1;
+custvect(7,:) = MAX; custvect(7,3:4) = -MAX-1;
+custvect(8,:) = MAX; custvect(8,2) = -MAX-1;
 
 %% unione delle due matrici
 allvect = [randvect;custvect];

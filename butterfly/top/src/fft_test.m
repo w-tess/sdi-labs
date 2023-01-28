@@ -10,7 +10,7 @@ f=(-L/2:(L/2-1))*df; % intervallo in frequenza
 MAX=2^15-1;
 % nomi da fornire ai grafici
 t0=["Onda sinusoidale", "Onda quadra", ...
-    "Onda triangolare", "Funzione porta", ...
+    "Onda dente di sega", "Funzione porta", ...
     "Funzione Delta di Dirac", ...
     "Funzione Delta di Dirac 2", ...
     "Onda sinusoidale complessa", ...
@@ -45,7 +45,7 @@ x1=square(2*pi*freq*t+phi1);
 x2=sawtooth(2*pi*freq*t);
 
 %% definizione funzione porta
-x3=zeros(1,L); x3(1:L*5/16)=1;
+x3=zeros(1,L); x3(1:L*4/16)=1;
 
 %% definizione funzione Delta di Dirac
 x4=zeros(1,L); x4(1)=1;
@@ -117,6 +117,7 @@ for i=0:1
         stem(f, abs(X(4*i+j+1,:)));
         if L==16 stem(f, abs(Y(4*i+j+1,:))); end
         hold off;
+        xlim([-16 16]);
         title(t1(4*i+j+1));
         legend("MATLAB", "FFT\_1616");
         grid
