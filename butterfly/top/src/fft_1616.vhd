@@ -172,7 +172,7 @@ begin
 -- se tale riordinamento non venisse implementato, lo spettro
 -- rappresentato non risulterebbe coerente
 
------------------ BIT-REVERSAL REORDERING -----------------
+----------------- BIT-REVERSE REORDERING -----------------
 
 	fifth_level_proc : process(tmp_level) is
 	begin
