@@ -62,6 +62,7 @@ architecture behavioral of cu_butterfly is
 	signal pla_out : std_logic;
 	signal uar_out : std_logic_vector(3 downto 0);
 	signal ls_mux_out : std_logic;
+	signal present_state : std_logic_vector(3 downto 0);
 
 begin
 	
@@ -115,6 +116,9 @@ begin
 
 	uROM_MUX0 : urom_mux_out <= 
 		urom_even_out when ls_mux_out = '0' else urom_odd_out;
+
+	-- utilizzato solo a fini di test
+	present_state <= uar_out(3 downto 1) & ls_mux_out;
 
 	-- assegno infine i restanti campi di uIR ai campi 
 	-- corrispondenti in cu_commands
